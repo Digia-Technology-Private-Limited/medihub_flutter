@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../models/product.dart';
-import '../core/theme/app_colors.dart';
-import '../core/utils/price_utils.dart';
+import 'package:medihub/core/theme/app_colors.dart';
+import 'package:medihub/core/utils/price_utils.dart';
+import 'package:medihub/models/product.dart';
 
 class VariantSelectorDialog extends StatelessWidget {
   final List<Variant> variants;

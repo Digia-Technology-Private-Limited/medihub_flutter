@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/theme/app_colors.dart';
-import '../../models/product.dart';
+import '../../core/design_system/design_system.dart';
 import '../../providers/products_provider.dart';
-import '../../widgets/app_bar_widget.dart';
-import '../../widgets/product_card_horizontal.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_text_styles.dart';
+import '../../core/services/analytics_service.dart';
+import '../../models/product.dart';
 
 class ProductListingScreen extends StatefulWidget {
   final String? collectionHandle;
+  final List<Product>? products;
+  final String? title;
 
   const ProductListingScreen({
     super.key,
     this.collectionHandle,
+    this.products,
+    this.title,
   });
 
   @override
@@ -19,6 +24,7 @@ class ProductListingScreen extends StatefulWidget {
 }
 
 class _ProductListingScreenState extends State<ProductListingScreen> {
+  final AnalyticsService _analytics = AnalyticsService();
   String _title = '';
   List<Product> _products = [];
   bool _isLoading = true;
@@ -27,7 +33,13 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
   @override
   void initState() {
     super.initState();
-    _loadProducts();
+    if (widget.products != null) {
+      _products = widget.products!;
+      _title = widget.title ?? '';
+      _isLoading = false;
+    } else {
+      _loadProducts();
+    }
   }
 
   Future<void> _loadProducts() async {
@@ -52,6 +64,11 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
           _products = result.products;
           _isLoading = false;
         });
+        _analytics.trackCategoryViewed(
+          categoryName: result.title,
+          categoryHandle: widget.collectionHandle!,
+          productCount: result.products.length,
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -80,15 +97,16 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
 
   Widget _buildBody() {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return AppLoading.page();
     }
 
     if (_error != null) {
       return Center(
         child: Text(
           _error!,
-          style: TextStyle(
-              fontSize: 16, color: AppColors.of(context).contentSecondary),
+          style: AppTextStyles.bodyLarge(
+            color: AppColors.of(context).contentSecondary,
+          ),
         ),
       );
     }
@@ -97,8 +115,9 @@ class _ProductListingScreenState extends State<ProductListingScreen> {
       return Center(
         child: Text(
           'No products found',
-          style: TextStyle(
-              fontSize: 16, color: AppColors.of(context).contentSecondary),
+          style: AppTextStyles.bodyLarge(
+            color: AppColors.of(context).contentSecondary,
+          ),
         ),
       );
     }

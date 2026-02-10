@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:medihub/core/theme/app_colors.dart';
+import 'package:medihub/providers/address_provider.dart';
+import 'package:medihub/views/address/add_address_screen.dart';
 import 'package:provider/provider.dart';
-import '../core/theme/app_colors.dart';
-import '../providers/address_provider.dart';
-import '../views/address/add_address_screen.dart';
 
 class AddressBottomSheet extends StatelessWidget {
   const AddressBottomSheet({super.key});

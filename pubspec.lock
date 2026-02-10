@@ -210,7 +210,7 @@ packages:
     source: hosted
     version: "1.0.0"
   digia_ui:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       path: "."
       ref: uiActions
@@ -219,7 +219,7 @@ packages:
     source: git
     version: "1.6.1"
   digiaclevertap:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       path: "."
       ref: main

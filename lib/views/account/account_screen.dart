@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_text_styles.dart';
+import '../../core/services/analytics_service.dart';
 import '../../providers/theme_provider.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -16,11 +18,7 @@ class AccountScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Account',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: colors.contentPrimary,
-          ),
+          style: AppTextStyles.headingSmall(color: colors.contentPrimary),
         ),
         centerTitle: false,
       ),
@@ -49,19 +47,16 @@ class AccountScreen extends StatelessWidget {
                       children: [
                         Text(
                           'Guest User',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                          style: AppTextStyles.bodyLarge(
                             color: colors.contentPrimary,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Sign in for best experience',
-                          style: TextStyle(
-                            color: colors.contentSecondary,
-                            fontSize: 14,
-                          ),
+                          style: AppTextStyles.bodySmall(
+                              color: colors.contentSecondary),
                         ),
                       ],
                     ),
@@ -119,12 +114,8 @@ class AccountScreen extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                     child: Text(
                       'Appearance',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: colors.contentSecondary,
-                        letterSpacing: 0.5,
-                      ),
+                      style:
+                          AppTextStyles.label(color: colors.contentSecondary),
                     ),
                   ),
                   Padding(
@@ -143,16 +134,20 @@ class AccountScreen extends StatelessWidget {
                         Expanded(
                           child: Text(
                             'Dark Mode',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
+                            style: AppTextStyles.bodyDefault(
                               color: colors.contentPrimary,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
                         Switch(
                           value: themeProvider.isDarkMode,
-                          onChanged: (_) => themeProvider.toggleTheme(),
+                          onChanged: (_) {
+                            themeProvider.toggleTheme();
+                            AnalyticsService().trackDarkModeToggled(
+                              isDarkMode: !themeProvider.isDarkMode,
+                            );
+                          },
                           activeThumbColor: AppColors.headerBlue,
                         ),
                       ],
@@ -208,10 +203,9 @@ class AccountScreen extends StatelessWidget {
             Expanded(
               child: Text(
                 title,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
+                style: AppTextStyles.bodyDefault(
                   color: colors.contentPrimary,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),

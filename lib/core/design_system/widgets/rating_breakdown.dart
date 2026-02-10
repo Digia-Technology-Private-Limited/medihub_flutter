@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../core/theme/app_colors.dart';
+import 'package:medihub/core/theme/app_colors.dart';
+import 'package:medihub/core/theme/app_text_styles.dart';
 
 class RatingBreakdown extends StatelessWidget {
   final double averageRating;
@@ -47,11 +48,10 @@ class RatingBreakdown extends StatelessWidget {
                         children: [
                           Text(
                             '${averageRating.toStringAsFixed(1)} Out of 5',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
+                            style: AppTextStyles.bodyLarge(
                               color: colors.contentPrimary,
-                            ),
+                              fontWeight: FontWeight.w600,
+                            ).copyWith(fontSize: 15),
                           ),
                           const SizedBox(width: 8),
                           ...List.generate(5, (index) {
@@ -61,7 +61,7 @@ class RatingBreakdown extends StatelessWidget {
                                   : (index < averageRating
                                       ? Icons.star_half
                                       : Icons.star_border),
-                              color: AppColors.tokenStarYellow,
+                              color: colors.ratingStar,
                               size: 18,
                             );
                           }),
@@ -70,8 +70,7 @@ class RatingBreakdown extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         '($totalRatings rating, $totalReviews reviews)',
-                        style: TextStyle(
-                          fontSize: 12,
+                        style: AppTextStyles.roboto12Regular(
                           color: colors.contentSecondary,
                         ),
                       ),
@@ -103,16 +102,14 @@ class RatingBreakdown extends StatelessWidget {
                       width: 20,
                       child: Text(
                         '$rating',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
+                        style: AppTextStyles.roboto12Medium(
                           color: colors.contentPrimary,
-                        ),
+                        ).copyWith(fontSize: 13),
                       ),
                     ),
-                    const Icon(
+                    Icon(
                       Icons.star,
-                      color: AppColors.tokenStarYellow,
+                      color: colors.ratingStar,
                       size: 14,
                     ),
                     const SizedBox(width: 8),
@@ -128,7 +125,7 @@ class RatingBreakdown extends StatelessWidget {
                           widthFactor: fraction,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: AppColors.tokenStarYellow,
+                              color: colors.ratingStar,
                               borderRadius: BorderRadius.circular(4),
                             ),
                           ),
@@ -141,8 +138,7 @@ class RatingBreakdown extends StatelessWidget {
                       child: Text(
                         '$count',
                         textAlign: TextAlign.right,
-                        style: TextStyle(
-                          fontSize: 12,
+                        style: AppTextStyles.roboto12Regular(
                           color: colors.contentSecondary,
                         ),
                       ),

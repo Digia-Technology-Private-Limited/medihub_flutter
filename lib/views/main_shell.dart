@@ -7,6 +7,7 @@ import 'homepage/homepage_screen.dart';
 import 'brands/brands_screen.dart';
 import 'account/account_screen.dart';
 import 'cart/cart_screen.dart';
+import '../core/design_system/design_system.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -18,6 +19,8 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   final AnalyticsService _analytics = AnalyticsService();
   int _currentIndex = 0;
+
+  static const _tabNames = ['Home', 'Brands', 'Account', 'Cart'];
 
   final List<Widget> _screens = const [
     HomepageScreen(),
@@ -48,7 +51,19 @@ class _MainShellState extends State<MainShell> {
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) {
-            if (index == 3) _analytics.trackHomeLanded();
+            _analytics.trackBottomNavTapped(
+              tabName: _tabNames[index],
+              tabIndex: index,
+            );
+            if (index == 3) {
+              final cartProvider =
+                  Provider.of<CartProvider>(context, listen: false);
+              _analytics.trackCartViewed(
+                itemCount: cartProvider.cartCount,
+                totalValue:
+                    cartProvider.cart?.cost?.totalAmount?.amountAsDouble ?? 0.0,
+              );
+            }
             setState(() {
               _currentIndex = index;
             });
@@ -73,51 +88,19 @@ class _MainShellState extends State<MainShell> {
               label: 'Account',
             ),
             BottomNavigationBarItem(
-              icon: _buildCartIcon(Icons.shopping_cart_outlined),
-              activeIcon: _buildCartIcon(Icons.shopping_cart),
+              icon: CartIconBadge(
+                icon: Icons.shopping_cart_outlined,
+                color: colors.contentSecondary,
+              ),
+              activeIcon: CartIconBadge(
+                icon: Icons.shopping_cart,
+                color: colors.brandPrimary,
+              ),
               label: 'Cart',
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildCartIcon(IconData icon) {
-    return Consumer<CartProvider>(
-      builder: (context, cartProvider, _) {
-        return Stack(
-          children: [
-            Icon(icon),
-            if (cartProvider.cartCount > 0)
-              Positioned(
-                right: 0,
-                top: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  constraints: const BoxConstraints(
-                    minWidth: 14,
-                    minHeight: 14,
-                  ),
-                  child: Center(
-                    child: Text(
-                      '${cartProvider.cartCount > 9 ? '9+' : cartProvider.cartCount}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 8,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        );
-      },
     );
   }
 }

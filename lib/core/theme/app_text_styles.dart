@@ -227,11 +227,11 @@ class AppTextStyles {
   static TextStyle priceStrikethrough({Color? color}) => GoogleFonts.roboto(
         fontSize: 12,
         fontWeight: FontWeight.w500,
-        color: color ?? const Color(0xFF949699),
+        color: color,
         decoration: TextDecoration.lineThrough,
         height: 1.5,
       );
 
   static TextStyle priceDiscount({Color? color}) =>
-      roboto8SemiBold(color: color ?? const Color(0xFFFF6F5C));
+      roboto8SemiBold(color: color);
 }

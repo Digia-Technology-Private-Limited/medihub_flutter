@@ -101,6 +101,9 @@ class AppColors {
     iconSecondary: Color(0xFF757575),
     shimmerBase: Color(0xFFE0E0E0),
     shimmerHighlight: Color(0xFFF5F5F5),
+    strikethroughGrey: tokenStrikethroughGrey,
+    discountOrange: tokenOrange,
+    ratingStar: tokenStarYellow,
   );
 
   static const _dark = AppColorScheme(
@@ -122,6 +125,9 @@ class AppColors {
     iconSecondary: Color(0xFF9E9E9E),
     shimmerBase: Color(0xFF424242),
     shimmerHighlight: Color(0xFF616161),
+    strikethroughGrey: darkTokenGrey,
+    discountOrange: darkTokenOrange,
+    ratingStar: darkTokenStarYellow,
   );
 }
 
@@ -145,6 +151,9 @@ class AppColorScheme {
   final Color iconSecondary;
   final Color shimmerBase;
   final Color shimmerHighlight;
+  final Color strikethroughGrey;
+  final Color discountOrange;
+  final Color ratingStar;
 
   const AppColorScheme({
     required this.backgroundPrimary,
@@ -165,5 +174,8 @@ class AppColorScheme {
     required this.iconSecondary,
     required this.shimmerBase,
     required this.shimmerHighlight,
+    required this.strikethroughGrey,
+    required this.discountOrange,
+    required this.ratingStar,
   });
 }

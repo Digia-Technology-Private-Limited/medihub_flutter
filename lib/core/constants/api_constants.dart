@@ -20,6 +20,8 @@ class ApiConstants {
             id
             description
             availableForSale
+            vendor
+            tags
             images(first: 10) {
               edges {
                 node {
@@ -258,7 +260,17 @@ class ApiConstants {
           id
           checkoutUrl
           totalQuantity
-          lines(first: 10) {
+          cost {
+            subtotalAmount {
+              amount
+              currencyCode
+            }
+            totalAmount {
+              amount
+              currencyCode
+            }
+          }
+          lines(first: 20) {
             edges {
               node {
                 id
@@ -280,7 +292,6 @@ class ApiConstants {
                       altText
                     }
                     product {
-                      id
                       title
                       handle
                     }
@@ -301,6 +312,16 @@ class ApiConstants {
                   }
                 }
               }
+            }
+          }
+          discountCodes {
+            code
+            applicable
+          }
+          discountAllocations {
+            discountedAmount {
+              amount
+              currencyCode
             }
           }
         }
@@ -396,11 +417,43 @@ class ApiConstants {
           id
           checkoutUrl
           totalQuantity
-          lines(first: 10) {
+          cost {
+            subtotalAmount {
+              amount
+              currencyCode
+            }
+            totalAmount {
+              amount
+              currencyCode
+            }
+          }
+          lines(first: 20) {
             edges {
               node {
                 id
                 quantity
+                merchandise {
+                  ... on ProductVariant {
+                    id
+                    title
+                    price {
+                      amount
+                      currencyCode
+                    }
+                    compareAtPrice {
+                      amount
+                      currencyCode
+                    }
+                    image {
+                      url
+                      altText
+                    }
+                    product {
+                      title
+                      handle
+                    }
+                  }
+                }
                 cost {
                   amountPerQuantity {
                     amount
@@ -415,21 +468,17 @@ class ApiConstants {
                     currencyCode
                   }
                 }
-                merchandise {
-                  ... on ProductVariant {
-                    id
-                    title
-                    image {
-                      url
-                      altText
-                    }
-                    product {
-                      id
-                      title
-                    }
-                  }
-                }
               }
+            }
+          }
+          discountCodes {
+            code
+            applicable
+          }
+          discountAllocations {
+            discountedAmount {
+              amount
+              currencyCode
             }
           }
         }
@@ -446,33 +495,70 @@ class ApiConstants {
       cartLinesUpdate(cartId: \$cartId, lines: \$lines) {
         cart {
           id
+          checkoutUrl
           totalQuantity
-          lines(first: 10) {
+          cost {
+            subtotalAmount {
+              amount
+              currencyCode
+            }
+            totalAmount {
+              amount
+              currencyCode
+            }
+          }
+          lines(first: 20) {
             edges {
               node {
                 id
                 quantity
-                cost {
-                  totalAmount {
-                    amount
-                    currencyCode
-                  }
-                }
                 merchandise {
                   ... on ProductVariant {
                     id
                     title
+                    price {
+                      amount
+                      currencyCode
+                    }
+                    compareAtPrice {
+                      amount
+                      currencyCode
+                    }
                     image {
                       url
                       altText
                     }
                     product {
-                      id
                       title
+                      handle
                     }
                   }
                 }
+                cost {
+                  amountPerQuantity {
+                    amount
+                    currencyCode
+                  }
+                  totalAmount {
+                    amount
+                    currencyCode
+                  }
+                  compareAtAmountPerQuantity {
+                    amount
+                    currencyCode
+                  }
+                }
               }
+            }
+          }
+          discountCodes {
+            code
+            applicable
+          }
+          discountAllocations {
+            discountedAmount {
+              amount
+              currencyCode
             }
           }
         }

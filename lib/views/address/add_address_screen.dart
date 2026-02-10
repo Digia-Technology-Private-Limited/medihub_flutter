@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_text_styles.dart';
 import '../../providers/address_provider.dart';
 
 class AddAddressScreen extends StatefulWidget {
@@ -65,13 +66,11 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         backgroundColor: AppColors.headerBlue,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'Add New Address',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
+          style: AppTextStyles.headingMedium(
             color: AppColors.tokenWhite,
-          ),
+          ).copyWith(fontWeight: FontWeight.w600),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -169,8 +168,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
               const SizedBox(height: 24),
               Text(
                 'Address Type',
-                style: TextStyle(
-                  fontSize: 14,
+                style: AppTextStyles.bodyDefault(
                   fontWeight: FontWeight.w600,
                   color: colors.contentPrimary,
                 ),
@@ -201,12 +199,9 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
+                  child: Text(
                     'Save and Continue',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: AppTextStyles.button(color: AppColors.tokenWhite),
                   ),
                 ),
               ),
@@ -231,8 +226,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: 14,
+          style: AppTextStyles.bodyDefault(
             fontWeight: FontWeight.w600,
             color: colors.contentPrimary,
           ),
@@ -244,9 +238,8 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           validator: validator,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(
+            hintStyle: AppTextStyles.bodyDefault(
               color: colors.contentTertiary,
-              fontSize: 14,
             ),
             filled: true,
             fillColor: colors.backgroundSecondary,
@@ -309,12 +302,12 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
             const SizedBox(width: 6),
             Text(
               label,
-              style: TextStyle(
+              style: AppTextStyles.roboto12Medium(
                 color:
                     isSelected ? AppColors.headerBlue : colors.contentSecondary,
-                fontSize: 13,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-              ),
+              ).copyWith(
+                  fontSize: 13,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500),
             ),
           ],
         ),

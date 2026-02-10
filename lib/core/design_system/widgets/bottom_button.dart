@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medihub/core/theme/app_colors.dart';
+import 'package:medihub/core/theme/app_text_styles.dart';
 
 class BottomButton extends StatelessWidget {
   final String text;
@@ -22,21 +24,24 @@ class BottomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     final theme = Theme.of(context);
     final effectiveBgColor = backgroundColor ?? theme.colorScheme.primary;
-    final effectiveTextColor = textColor ?? Colors.white;
+    final effectiveTextColor = textColor ?? colors.contentPrimary;
 
     return Container(
       width: double.infinity,
       height: 56,
       decoration: BoxDecoration(
-        color: isOutlined ? Colors.transparent : effectiveBgColor,
+        color: isOutlined
+            ? colors.backgroundPrimary.withValues(alpha: 0)
+            : effectiveBgColor,
         border:
             isOutlined ? Border.all(color: effectiveBgColor, width: 2) : null,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Material(
-        color: Colors.transparent,
+        color: colors.backgroundPrimary.withValues(alpha: 0),
         child: InkWell(
           onTap: isLoading ? null : onPressed,
           borderRadius: BorderRadius.circular(8),
@@ -64,12 +69,10 @@ class BottomButton extends StatelessWidget {
                       ],
                       Text(
                         text,
-                        style: theme.textTheme.labelLarge?.copyWith(
+                        style: AppTextStyles.button(
                           color: isOutlined
                               ? effectiveBgColor
                               : effectiveTextColor,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
                         ),
                       ),
                     ],

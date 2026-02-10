@@ -94,7 +94,8 @@ class PriceInfo {
     );
   }
 
-  double get amountAsDouble => double.tryParse(amount) ?? 0.0;
+  double get amountAsDouble =>
+      double.tryParse(amount.replaceAll(',', '')) ?? 0.0;
 }
 
 class PriceRange {

@@ -30,12 +30,7 @@ dependencies:
   clevertap_plugin: ^3.6.0
   flutter_svg: ^2.2.3
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_launcher_icons: ^0.13.1
-  flutter_native_splash: ^2.3.0
-  flutter_lints: ^6.0.0
+  # Digia
   digia_ui:
     git:
       url: https://github.com/Digia-Technology-Private-Limited/digia_ui.git
@@ -44,6 +39,13 @@ dev_dependencies:
     git:
       url: https://github.com/Digia-Technology-Private-Limited/digia_clevertap_flutter.git
       ref: main
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true

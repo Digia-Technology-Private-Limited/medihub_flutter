@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_text_styles.dart';
+import '../../core/services/analytics_service.dart';
 import '../../providers/products_provider.dart';
 import '../../providers/address_provider.dart';
 import '../../models/product.dart';
-import '../../widgets/home_header.dart';
-import '../../widgets/product_card.dart';
-import '../../widgets/loading_shimmer.dart';
-import '../../widgets/image_carousel.dart';
-import '../../widgets/section_header.dart';
-import '../../widgets/brand_card.dart';
-import '../../widgets/address_bottom_sheet.dart';
+import '../../core/design_system/design_system.dart';
 import '../product_listing/product_listing_screen.dart';
 
 class HomepageScreen extends StatefulWidget {
@@ -22,6 +18,7 @@ class HomepageScreen extends StatefulWidget {
 }
 
 class _HomepageScreenState extends State<HomepageScreen> {
+  final AnalyticsService _analytics = AnalyticsService();
   @override
   void initState() {
     super.initState();
@@ -31,10 +28,14 @@ class _HomepageScreenState extends State<HomepageScreen> {
   Future<void> _loadData() async {
     final productsProvider =
         Provider.of<ProductsProvider>(context, listen: false);
-    await productsProvider.fetchCollections();
+    await Future.wait([
+      productsProvider.fetchCollections(),
+      productsProvider.fetchAllProducts(),
+    ]);
   }
 
   void _showAddressBottomSheet() {
+    _analytics.trackAddressSheetOpened();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -66,7 +67,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
               child: Consumer<ProductsProvider>(
                 builder: (context, productsProvider, _) {
                   if (productsProvider.isLoadingCollections) {
-                    return const Center(child: CircularProgressIndicator());
+                    return AppLoading.page();
                   }
 
                   final collections = productsProvider.collections;
@@ -118,6 +119,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
             padding: const EdgeInsets.only(right: 8),
             child: GestureDetector(
               onTap: () {
+                _analytics.trackCategoryClicked(
+                  categoryName: collection.title,
+                  categoryHandle: collection.handle,
+                );
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -137,11 +142,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 alignment: Alignment.center,
                 child: Text(
                   collection.title,
-                  style: TextStyle(
+                  style: AppTextStyles.roboto12Medium(
                     color: colors.contentPrimary,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  ).copyWith(fontSize: 13),
                 ),
               ),
             ),
@@ -162,11 +165,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'Top Brands',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+            style: AppTextStyles.headingMedium(
               color: colors.contentPrimary,
-            ),
+            ).copyWith(fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(height: 12),
@@ -187,12 +188,32 @@ class _HomepageScreenState extends State<HomepageScreen> {
               return BrandCard(
                 title: brand['title']!,
                 imageUrl: brand['imageUrl']!,
-                onTap: () {
+                onTap: () async {
+                  final brandTitle = brand['title']!;
+                  final brandHandle = brand['handle']!;
+
+                  final productsProvider =
+                      Provider.of<ProductsProvider>(context, listen: false);
+
+                  // Filter products by title containing brand name (matching JS logic)
+                  final filteredProducts = productsProvider.allProducts
+                      .where((product) => product.title
+                          .toLowerCase()
+                          .contains(brandTitle.toLowerCase()))
+                      .toList();
+
+                  if (!context.mounted) return;
+
+                  _analytics.trackBrandClicked(
+                    brandName: brandTitle,
+                    brandHandle: brandHandle,
+                  );
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) => ProductListingScreen(
-                        collectionHandle: brand['handle'],
+                        products: filteredProducts,
+                        title: brandTitle,
                       ),
                     ),
                   );
@@ -268,10 +289,15 @@ class _CollectionProductSectionState extends State<_CollectionProductSection> {
                   itemBuilder: (context, index) => const ProductCardShimmer(),
                 )
               : _products.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: Padding(
-                        padding: EdgeInsets.all(32),
-                        child: Text('No products available'),
+                        padding: const EdgeInsets.all(32),
+                        child: Text(
+                          'No products available',
+                          style: AppTextStyles.bodyDefault(
+                            color: AppColors.of(context).contentSecondary,
+                          ),
+                        ),
                       ),
                     )
                   : ListView.builder(

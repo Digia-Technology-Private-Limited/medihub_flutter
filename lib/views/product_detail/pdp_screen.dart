@@ -5,13 +5,11 @@ import '../../models/product.dart';
 import '../../providers/products_provider.dart';
 import '../../providers/cart_provider.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/price_utils.dart';
 import '../../core/constants/app_constants.dart';
-import '../../widgets/loading_shimmer.dart';
-import '../../widgets/variant_selector_dialog.dart';
-import '../../widgets/expandable_section.dart';
-import '../../widgets/offer_card.dart';
-import '../../widgets/rating_breakdown.dart';
+import '../../core/services/analytics_service.dart';
+import '../../core/design_system/design_system.dart';
 import '../search/search_screen.dart';
 import '../cart/cart_screen.dart';
 
@@ -25,6 +23,7 @@ class PDPScreen extends StatefulWidget {
 }
 
 class _PDPScreenState extends State<PDPScreen> {
+  final AnalyticsService _analytics = AnalyticsService();
   Product? _product;
   Variant? _selectedVariant;
   bool _isLoading = true;
@@ -57,6 +56,12 @@ class _PDPScreenState extends State<PDPScreen> {
             product.variants.isNotEmpty ? product.variants.first : null;
         _isLoading = false;
       });
+      _analytics.trackProductViewed(
+        productId: product.id,
+        productTitle: product.title,
+        handle: product.handle,
+        price: product.priceRange.minVariantPrice.amountAsDouble,
+      );
     } else {
       setState(() => _isLoading = false);
     }
@@ -71,6 +76,11 @@ class _PDPScreenState extends State<PDPScreen> {
 
     if (selected != null) {
       setState(() => _selectedVariant = selected);
+      _analytics.trackProductVariantSelected(
+        productId: _product!.id,
+        variantId: selected.id,
+        variantTitle: selected.title,
+      );
     }
   }
 
@@ -79,14 +89,21 @@ class _PDPScreenState extends State<PDPScreen> {
     if (_isLoading) {
       return Scaffold(
         appBar: _buildAppBar(),
-        body: const Center(child: CircularProgressIndicator()),
+        body: AppLoading.page(),
       );
     }
 
     if (_product == null) {
       return Scaffold(
         appBar: _buildAppBar(),
-        body: const Center(child: Text('Product not found')),
+        body: Center(
+          child: Text(
+            'Product not found',
+            style: AppTextStyles.bodyLarge(
+              color: AppColors.of(context).contentPrimary,
+            ),
+          ),
+        ),
       );
     }
 
@@ -139,9 +156,8 @@ class _PDPScreenState extends State<PDPScreen> {
       ),
       title: Text(
         'Product Details',
-        style: TextStyle(
+        style: AppTextStyles.bodyLarge(
           color: colors.contentPrimary,
-          fontSize: 18,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -185,10 +201,8 @@ class _PDPScreenState extends State<PDPScreen> {
                       ),
                       child: Text(
                         '${cartProvider.cartCount}',
-                        style: TextStyle(
+                        style: AppTextStyles.roboto10SemiBold(
                           color: colors.backgroundPrimary,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -218,8 +232,7 @@ class _PDPScreenState extends State<PDPScreen> {
           const SizedBox(width: 8),
           Text(
             'Delivery By ${AppConstants.expectedDeliveryDate}',
-            style: TextStyle(
-              fontSize: 14,
+            style: AppTextStyles.bodySmall(
               color: colors.contentPrimary,
               fontWeight: FontWeight.w500,
             ),
@@ -276,8 +289,14 @@ class _PDPScreenState extends State<PDPScreen> {
                           ? Icons.favorite
                           : Icons.favorite_border,
                       color: _isWishlisted ? Colors.red : colors.iconSecondary,
-                      onTap: () =>
-                          setState(() => _isWishlisted = !_isWishlisted),
+                      onTap: () {
+                        setState(() => _isWishlisted = !_isWishlisted);
+                        _analytics.trackProductWishlisted(
+                          productId: _product!.id,
+                          productTitle: _product!.title,
+                          isWishlisted: _isWishlisted,
+                        );
+                      },
                     ),
                     const SizedBox(height: 8),
                     _buildActionButton(
@@ -362,11 +381,9 @@ class _PDPScreenState extends State<PDPScreen> {
         children: [
           Text(
             _product!.title,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+            style: AppTextStyles.bodyLarge(
               color: colors.contentPrimary,
-              height: 1.3,
+              fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 12),
@@ -376,27 +393,22 @@ class _PDPScreenState extends State<PDPScreen> {
             children: [
               Text(
                 PriceUtils.formatPrice(price),
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+                style: AppTextStyles.headingMedium(
                   color: colors.contentPrimary,
-                ),
+                ).copyWith(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               if (compareAtPrice != null && discountPercent > 0) ...[
                 const SizedBox(width: 10),
                 Text(
                   PriceUtils.formatPrice(compareAtPrice),
-                  style: TextStyle(
-                    fontSize: 16,
-                    decoration: TextDecoration.lineThrough,
-                    color: colors.contentSecondary,
+                  style: AppTextStyles.priceStrikethrough(
+                    color: colors.strikethroughGrey,
                   ),
                 ),
                 const SizedBox(width: 10),
                 Text(
                   '($discountPercent% off)',
-                  style: TextStyle(
-                    fontSize: 14,
+                  style: AppTextStyles.bodySmall(
                     color: colors.success,
                     fontWeight: FontWeight.w500,
                   ),
@@ -407,10 +419,8 @@ class _PDPScreenState extends State<PDPScreen> {
           const SizedBox(height: 4),
           Text(
             'Inclusive of All Taxes',
-            style: TextStyle(
-              fontSize: 12,
-              color: colors.contentSecondary,
-            ),
+            style:
+                AppTextStyles.roboto12Regular(color: colors.contentSecondary),
           ),
           const SizedBox(height: 8),
           Row(
@@ -418,10 +428,7 @@ class _PDPScreenState extends State<PDPScreen> {
               if (_product!.rating != null) ...[
                 Text(
                   _product!.rating!.toStringAsFixed(1),
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: AppTextStyles.bodySmall(fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(width: 4),
                 Row(
@@ -430,7 +437,7 @@ class _PDPScreenState extends State<PDPScreen> {
                       index < (_product!.rating ?? 0).floor()
                           ? Icons.star
                           : Icons.star_border,
-                      color: AppColors.tokenStarYellow,
+                      color: colors.ratingStar,
                       size: 16,
                     );
                   }),
@@ -438,31 +445,26 @@ class _PDPScreenState extends State<PDPScreen> {
                 const SizedBox(width: 6),
                 Text(
                   '(${_product!.reviewCount ?? 0} rating)',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: colors.contentSecondary,
-                  ),
+                  style: AppTextStyles.roboto12Regular(
+                      color: colors.contentSecondary),
                 ),
                 const SizedBox(width: 12),
               ],
               Text(
                 'Earn ${AppConstants.hkCashReward}',
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: AppTextStyles.bodySmall(fontWeight: FontWeight.w500),
               ),
               const SizedBox(width: 4),
               Container(
                 padding: const EdgeInsets.all(2),
-                decoration: const BoxDecoration(
-                  color: AppColors.tokenStarYellow,
+                decoration: BoxDecoration(
+                  color: colors.ratingStar,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.emoji_events,
                   size: 12,
-                  color: Colors.white,
+                  color: colors.cardBackground,
                 ),
               ),
             ],
@@ -482,12 +484,9 @@ class _PDPScreenState extends State<PDPScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Select Variant',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-            ),
+            style: AppTextStyles.bodyDefault(fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),
           GestureDetector(
@@ -503,8 +502,7 @@ class _PDPScreenState extends State<PDPScreen> {
                 children: [
                   Text(
                     'Quantity : ${_selectedVariant?.title ?? 'Select'}',
-                    style: TextStyle(
-                      fontSize: 14,
+                    style: AppTextStyles.bodyDefault(
                       color: colors.contentPrimary,
                     ),
                   ),
@@ -531,12 +529,9 @@ class _PDPScreenState extends State<PDPScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Delivery & Services',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-            ),
+            style: AppTextStyles.bodyDefault(fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),
           Container(
@@ -547,10 +542,7 @@ class _PDPScreenState extends State<PDPScreen> {
             ),
             child: Text(
               '110078',
-              style: TextStyle(
-                fontSize: 14,
-                color: colors.contentSecondary,
-              ),
+              style: AppTextStyles.bodySmall(color: colors.contentSecondary),
             ),
           ),
           const SizedBox(height: 16),
@@ -589,12 +581,13 @@ class _PDPScreenState extends State<PDPScreen> {
         const SizedBox(width: 12),
         RichText(
           text: TextSpan(
-            style: TextStyle(fontSize: 13, color: colors.contentSecondary),
+            style: AppTextStyles.roboto12Medium(color: colors.contentSecondary),
             children: [
               if (boldText.isNotEmpty)
                 TextSpan(
                   text: boldText,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
+                  style: AppTextStyles.roboto12SemiBold()
+                      .copyWith(color: colors.contentSecondary),
                 ),
               TextSpan(text: normalText),
             ],
@@ -614,19 +607,14 @@ class _PDPScreenState extends State<PDPScreen> {
         children: [
           Row(
             children: [
-              const Text(
+              Text(
                 'Offers',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppTextStyles.bodyDefault(fontWeight: FontWeight.bold),
               ),
               Text(
                 '+4 Offers',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: colors.contentSecondary,
-                ),
+                style: AppTextStyles.roboto12Medium(
+                    color: colors.contentSecondary),
               ),
               const SizedBox(width: 4),
               Icon(Icons.arrow_forward_ios,
@@ -650,8 +638,7 @@ class _PDPScreenState extends State<PDPScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'Details',
-            style: TextStyle(
-              fontSize: 15,
+            style: AppTextStyles.bodyDefault(
               fontWeight: FontWeight.w600,
               color: colors.contentSecondary,
             ),
@@ -662,11 +649,9 @@ class _PDPScreenState extends State<PDPScreen> {
           title: 'Information',
           content: Text(
             'This is a dietary supplement, not a substitute for a varied diet. Consult your doctor before use if you are pregnant, nursing, or under medication. Keep out of reach of children.',
-            style: TextStyle(
-              fontSize: 13,
+            style: AppTextStyles.roboto12Medium(
               color: colors.contentSecondary,
-              height: 1.5,
-            ),
+            ).copyWith(fontSize: 13, height: 1.5),
           ),
         ),
         ExpandableSection(
@@ -686,8 +671,7 @@ class _PDPScreenState extends State<PDPScreen> {
                       padding: const EdgeInsets.only(bottom: 4),
                       child: Text(
                         item,
-                        style: TextStyle(
-                          fontSize: 13,
+                        style: AppTextStyles.roboto12Regular(
                           color: AppColors.of(context).contentSecondary,
                         ),
                       ),
@@ -699,11 +683,9 @@ class _PDPScreenState extends State<PDPScreen> {
           title: 'About the product',
           content: Text(
             _product!.description ?? 'No description available.',
-            style: TextStyle(
-              fontSize: 13,
+            style: AppTextStyles.roboto12Regular(
               color: colors.contentSecondary,
-              height: 1.5,
-            ),
+            ).copyWith(height: 1.5),
           ),
         ),
       ],
@@ -720,8 +702,7 @@ class _PDPScreenState extends State<PDPScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'Customer Reviews',
-            style: TextStyle(
-              fontSize: 15,
+            style: AppTextStyles.bodyDefault(
               fontWeight: FontWeight.w600,
               color: colors.contentPrimary,
             ),
@@ -754,8 +735,7 @@ class _PDPScreenState extends State<PDPScreen> {
         children: [
           Text(
             'Seller Information',
-            style: TextStyle(
-              fontSize: 15,
+            style: AppTextStyles.bodyDefault(
               fontWeight: FontWeight.w600,
               color: colors.contentPrimary,
             ),
@@ -773,14 +753,14 @@ class _PDPScreenState extends State<PDPScreen> {
               children: [
                 RichText(
                   text: TextSpan(
-                    style:
-                        TextStyle(fontSize: 13, color: colors.contentSecondary),
-                    children: const [
+                    style: AppTextStyles.roboto12Regular(
+                        color: colors.contentSecondary),
+                    children: [
                       TextSpan(
                         text: 'Sold and Marketed By : ',
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style: AppTextStyles.roboto12SemiBold(),
                       ),
-                      TextSpan(
+                      const TextSpan(
                         text: 'bright lifecare pvt ltd fullfilled by hea',
                       ),
                     ],
@@ -789,8 +769,7 @@ class _PDPScreenState extends State<PDPScreen> {
                 const SizedBox(height: 4),
                 Text(
                   'parasvnath arcdia, mg road, sector-14, gurugram(haryana) - 1',
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: AppTextStyles.roboto12Regular(
                     color: colors.contentSecondary,
                   ),
                 ),
@@ -827,14 +806,23 @@ class _PDPScreenState extends State<PDPScreen> {
                       ? null
                       : () async {
                           if (_selectedVariant != null) {
+                            _analytics.trackProductAddedToCart(
+                              productId: _product!.id,
+                              productTitle: _product!.title,
+                              variantId: _selectedVariant!.id,
+                              variantTitle: _selectedVariant!.title,
+                              price: _selectedVariant!.price.amountAsDouble,
+                              quantity: 1,
+                              source: 'pdp',
+                            );
                             await cartProvider.addToCart(
                               variantId: _selectedVariant!.id,
                             );
                           }
                         },
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.ctaOrange,
-                    side: BorderSide(color: AppColors.ctaOrange, width: 1.5),
+                    foregroundColor: colors.discountOrange,
+                    side: BorderSide(color: colors.discountOrange, width: 1.5),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -846,12 +834,10 @@ class _PDPScreenState extends State<PDPScreen> {
                           height: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Text(
+                      : Text(
                           'Add To cart',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: AppTextStyles.button(
+                              color: colors.discountOrange),
                         ),
                 );
               },
@@ -862,10 +848,31 @@ class _PDPScreenState extends State<PDPScreen> {
             child: ElevatedButton(
               onPressed: () async {
                 if (_selectedVariant != null) {
+                  _analytics.trackBuyNowClicked(
+                    productId: _product!.id,
+                    productTitle: _product!.title,
+                    variantId: _selectedVariant!.id,
+                    price: _selectedVariant!.price.amountAsDouble,
+                  );
+                  _analytics.trackProductAddedToCart(
+                    productId: _product!.id,
+                    productTitle: _product!.title,
+                    variantId: _selectedVariant!.id,
+                    variantTitle: _selectedVariant!.title,
+                    price: _selectedVariant!.price.amountAsDouble,
+                    quantity: 1,
+                    source: 'pdp_buy_now',
+                  );
                   final cartProvider =
                       Provider.of<CartProvider>(context, listen: false);
                   await cartProvider.addToCart(variantId: _selectedVariant!.id);
                   if (mounted) {
+                    _analytics.trackCartViewed(
+                      itemCount: cartProvider.cartCount,
+                      totalValue: cartProvider
+                              .cart?.cost?.totalAmount?.amountAsDouble ??
+                          0.0,
+                    );
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const CartScreen()),
@@ -874,20 +881,17 @@ class _PDPScreenState extends State<PDPScreen> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.ctaOrange,
-                foregroundColor: Colors.white,
+                backgroundColor: colors.discountOrange,
+                foregroundColor: colors.backgroundPrimary,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'Buy Now',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppTextStyles.button(color: colors.backgroundPrimary),
               ),
             ),
           ),

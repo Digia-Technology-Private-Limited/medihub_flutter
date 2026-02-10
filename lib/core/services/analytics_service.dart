@@ -40,7 +40,6 @@ class AnalyticsService {
       return;
     }
 
-    // Add common properties
     final enrichedProperties = {
       ...properties,
       'timestamp': DateTime.now().toIso8601String(),
@@ -51,6 +50,14 @@ class AnalyticsService {
   }
 
   // ─────────────────────────────────────────────────────────────────
+  // APP LIFECYCLE EVENTS
+  // ─────────────────────────────────────────────────────────────────
+
+  void trackAppOpened() {
+    _trackEvent('app_opened', {});
+  }
+
+  // ─────────────────────────────────────────────────────────────────
   // SCREEN EVENTS
   // ─────────────────────────────────────────────────────────────────
 
@@ -58,13 +65,32 @@ class AnalyticsService {
     _trackEvent('screen_viewed', {'screen_name': screenName});
   }
 
-  void trackHomeLanded() {
-    _trackEvent('9home_landed', {});
+  void trackBottomNavTapped({required String tabName, required int tabIndex}) {
+    _trackEvent('bottom_nav_tapped', {
+      'tab_name': tabName,
+      'tab_index': tabIndex,
+    });
   }
 
   // ─────────────────────────────────────────────────────────────────
   // PRODUCT EVENTS
   // ─────────────────────────────────────────────────────────────────
+
+  void trackProductClicked({
+    required String productId,
+    required String productTitle,
+    required String handle,
+    required double price,
+    required String source,
+  }) {
+    _trackEvent('product_clicked', {
+      'product_id': productId,
+      'product_title': productTitle,
+      'product_handle': handle,
+      'price': price,
+      'source': source,
+    });
+  }
 
   void trackProductViewed({
     required String productId,
@@ -87,6 +113,7 @@ class AnalyticsService {
     required String variantTitle,
     required double price,
     required int quantity,
+    required String source,
   }) {
     _trackEvent('product_added_to_cart', {
       'product_id': productId,
@@ -96,6 +123,7 @@ class AnalyticsService {
       'price': price,
       'quantity': quantity,
       'total_value': price * quantity,
+      'source': source,
     });
   }
 
@@ -123,6 +151,28 @@ class AnalyticsService {
     });
   }
 
+  void trackProductWishlisted({
+    required String productId,
+    required String productTitle,
+    required bool isWishlisted,
+  }) {
+    _trackEvent('product_wishlisted', {
+      'product_id': productId,
+      'product_title': productTitle,
+      'is_wishlisted': isWishlisted,
+    });
+  }
+
+  void trackProductShared({
+    required String productId,
+    required String productTitle,
+  }) {
+    _trackEvent('product_shared', {
+      'product_id': productId,
+      'product_title': productTitle,
+    });
+  }
+
   // ─────────────────────────────────────────────────────────────────
   // CART EVENTS
   // ─────────────────────────────────────────────────────────────────
@@ -134,6 +184,21 @@ class AnalyticsService {
     _trackEvent('cart_viewed', {
       'item_count': itemCount,
       'total_value': totalValue,
+    });
+  }
+
+  void trackCartItemQuantityUpdated({
+    required String productId,
+    required String productTitle,
+    required int oldQuantity,
+    required int newQuantity,
+  }) {
+    _trackEvent('cart_item_quantity_updated', {
+      'product_id': productId,
+      'product_title': productTitle,
+      'old_quantity': oldQuantity,
+      'new_quantity': newQuantity,
+      'action': newQuantity > oldQuantity ? 'increased' : 'decreased',
     });
   }
 
@@ -149,6 +214,20 @@ class AnalyticsService {
     });
   }
 
+  void trackBuyNowClicked({
+    required String productId,
+    required String productTitle,
+    required String variantId,
+    required double price,
+  }) {
+    _trackEvent('buy_now_clicked', {
+      'product_id': productId,
+      'product_title': productTitle,
+      'variant_id': variantId,
+      'price': price,
+    });
+  }
+
   void trackOrderPlaced({
     required int itemCount,
     required double totalValue,
@@ -156,6 +235,40 @@ class AnalyticsService {
     _trackEvent('order_placed', {
       'item_count': itemCount,
       'total_value': totalValue,
+    });
+  }
+
+  void trackContinueShoppingClicked({required String source}) {
+    _trackEvent('continue_shopping_clicked', {'source': source});
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // COUPON EVENTS
+  // ─────────────────────────────────────────────────────────────────
+
+  void trackCouponApplied({
+    required String couponCode,
+    required double discount,
+    required double cartValue,
+  }) {
+    _trackEvent('coupon_applied', {
+      'coupon_code': couponCode,
+      'discount': discount,
+      'cart_value': cartValue,
+    });
+  }
+
+  void trackCouponRemoved({required String couponCode}) {
+    _trackEvent('coupon_removed', {'coupon_code': couponCode});
+  }
+
+  void trackCouponFailed({
+    required String couponCode,
+    required String reason,
+  }) {
+    _trackEvent('coupon_failed', {
+      'coupon_code': couponCode,
+      'reason': reason,
     });
   }
 
@@ -177,9 +290,23 @@ class AnalyticsService {
     });
   }
 
+  void trackSearchSuggestionClicked({required String suggestion}) {
+    _trackEvent('search_suggestion_clicked', {'suggestion': suggestion});
+  }
+
   // ─────────────────────────────────────────────────────────────────
-  // CATEGORY/BRAND EVENTS
+  // CATEGORY / BRAND EVENTS
   // ─────────────────────────────────────────────────────────────────
+
+  void trackCategoryClicked({
+    required String categoryName,
+    required String categoryHandle,
+  }) {
+    _trackEvent('category_clicked', {
+      'category_name': categoryName,
+      'category_handle': categoryHandle,
+    });
+  }
 
   void trackCategoryViewed({
     required String categoryName,
@@ -193,6 +320,16 @@ class AnalyticsService {
     });
   }
 
+  void trackBrandClicked({
+    required String brandName,
+    required String brandHandle,
+  }) {
+    _trackEvent('brand_clicked', {
+      'brand_name': brandName,
+      'brand_handle': brandHandle,
+    });
+  }
+
   void trackBrandViewed({
     required String brandName,
     required String brandHandle,
@@ -201,5 +338,17 @@ class AnalyticsService {
       'brand_name': brandName,
       'brand_handle': brandHandle,
     });
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // USER PREFERENCE EVENTS
+  // ─────────────────────────────────────────────────────────────────
+
+  void trackDarkModeToggled({required bool isDarkMode}) {
+    _trackEvent('dark_mode_toggled', {'is_dark_mode': isDarkMode});
+  }
+
+  void trackAddressSheetOpened() {
+    _trackEvent('address_sheet_opened', {});
   }
 }

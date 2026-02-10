@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medihub/views/order_success/order_success_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import '../../models/cart.dart';
 import '../../providers/cart_provider.dart';
 import '../../core/services/analytics_service.dart';
@@ -9,6 +9,7 @@ import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/price_utils.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/utils/toast_utils.dart';
+import '../../core/design_system/design_system.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -21,20 +22,6 @@ class _CartScreenState extends State<CartScreen> {
   final AnalyticsService _analytics = AnalyticsService();
   String? _appliedCoupon;
   double _couponDiscount = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _analytics.trackScreenView('cart');
-
-    final cartProvider = Provider.of<CartProvider>(context, listen: false);
-    if (cartProvider.cart != null) {
-      _analytics.trackCartViewed(
-        itemCount: cartProvider.cartCount,
-        totalValue: cartProvider.cart!.cost?.totalAmount?.amountAsDouble ?? 0.0,
-      );
-    }
-  }
 
   void _showApplyCouponDialog() {
     final controller = TextEditingController();
@@ -87,7 +74,7 @@ class _CartScreenState extends State<CartScreen> {
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                            color: AppColors.ctaOrange,
+                            color: colors.discountOrange,
                             width: 1.5,
                           ),
                         ),
@@ -106,7 +93,7 @@ class _CartScreenState extends State<CartScreen> {
                       Navigator.pop(context, code);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.ctaOrange,
+                      backgroundColor: colors.discountOrange,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20,
@@ -176,13 +163,13 @@ class _CartScreenState extends State<CartScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.ctaOrange),
+                border: Border.all(color: colors.discountOrange),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
                 code,
                 style: AppTextStyles.roboto12SemiBold(
-                  color: AppColors.ctaOrange,
+                  color: colors.discountOrange,
                 ),
               ),
             ),
@@ -213,11 +200,19 @@ class _CartScreenState extends State<CartScreen> {
       case 'FIRST50':
         discount = (subtotal * 0.50).clamp(0, 500);
       default:
+        _analytics.trackCouponFailed(
+          couponCode: code,
+          reason: 'invalid_code',
+        );
         ToastUtils.showError('Invalid coupon code');
         return;
     }
 
     if (discount == 0) {
+      _analytics.trackCouponFailed(
+        couponCode: code,
+        reason: 'not_applicable',
+      );
       ToastUtils.showError('Coupon not applicable on this order');
       return;
     }
@@ -226,16 +221,23 @@ class _CartScreenState extends State<CartScreen> {
       _appliedCoupon = code.toUpperCase();
       _couponDiscount = discount;
     });
+    _analytics.trackCouponApplied(
+      couponCode: code.toUpperCase(),
+      discount: discount,
+      cartValue: subtotal,
+    );
     ToastUtils.showSuccess(
       'Coupon $code applied! You save ${PriceUtils.formatPriceFromDouble(discount)}',
     );
   }
 
   void _removeCoupon() {
+    final removedCoupon = _appliedCoupon!;
     setState(() {
       _appliedCoupon = null;
       _couponDiscount = 0;
     });
+    _analytics.trackCouponRemoved(couponCode: removedCoupon);
     ToastUtils.showInfo('Coupon removed');
   }
 
@@ -251,9 +253,7 @@ class _CartScreenState extends State<CartScreen> {
             return Column(
               children: [
                 _buildAppBar(cartProvider),
-                const Expanded(
-                  child: Center(child: CircularProgressIndicator()),
-                ),
+                Expanded(child: AppLoading.page()),
               ],
             );
           }
@@ -262,7 +262,7 @@ class _CartScreenState extends State<CartScreen> {
             return Column(
               children: [
                 _buildAppBar(cartProvider),
-                Expanded(child: _buildEmptyCart()),
+                Expanded(child: AppEmptyStates.cart()),
               ],
             );
           }
@@ -323,18 +323,14 @@ class _CartScreenState extends State<CartScreen> {
               ),
             Text(
               'Cart',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
+              style: AppTextStyles.headingMedium(
                 color: colors.contentPrimary,
-              ),
+              ).copyWith(fontWeight: FontWeight.w700),
             ),
             const SizedBox(width: 4),
             Text(
               '($itemCount Items)',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
+              style: AppTextStyles.bodyDefault(
                 color: colors.contentSecondary,
               ),
             ),
@@ -359,47 +355,10 @@ class _CartScreenState extends State<CartScreen> {
           const SizedBox(width: 8),
           Text(
             'Delivery By ${AppConstants.expectedDeliveryDate}',
-            style: TextStyle(
-              fontSize: 14,
+            style: AppTextStyles.bodySmall(
               fontWeight: FontWeight.w500,
               color: colors.contentPrimary,
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEmptyCart() {
-    final colors = AppColors.of(context);
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.shopping_cart_outlined,
-            size: 100,
-            color: colors.contentSecondary,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Your cart is empty',
-            style: AppTextStyles.headingSmall(color: colors.contentSecondary),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Add products to get started',
-            style: AppTextStyles.bodySmall(color: colors.contentSecondary),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.tokenOrange,
-              foregroundColor: AppColors.tokenWhite,
-            ),
-            child: const Text('Continue Shopping'),
           ),
         ],
       ),
@@ -434,22 +393,11 @@ class _CartScreenState extends State<CartScreen> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(6),
-                  child: CachedNetworkImage(
+                  child: AppImage(
                     imageUrl: imageUrl,
                     width: 80,
                     height: 90,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      width: 80,
-                      height: 90,
-                      color: colors.backgroundTertiary,
-                    ),
-                    errorWidget: (context, url, error) => Container(
-                      width: 80,
-                      height: 90,
-                      color: colors.backgroundTertiary,
-                      child: const Icon(Icons.image_not_supported),
-                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -500,7 +448,7 @@ class _CartScreenState extends State<CartScreen> {
                             Text(
                               'Save ${PriceUtils.formatPriceFromDouble(savings)}',
                               style: AppTextStyles.roboto10SemiBold(
-                                color: AppColors.ctaOrange,
+                                color: colors.discountOrange,
                               ),
                             ),
                           ],
@@ -519,19 +467,25 @@ class _CartScreenState extends State<CartScreen> {
                 GestureDetector(
                   onTap: () async {
                     if (line.quantity > 1) {
+                      _analytics.trackCartItemQuantityUpdated(
+                        productId: merchandise.id,
+                        productTitle: line.productTitle,
+                        oldQuantity: line.quantity,
+                        newQuantity: line.quantity - 1,
+                      );
                       await cartProvider.updateCartItemQuantity(
                         lineItemId: line.id,
                         quantity: line.quantity - 1,
                       );
                     } else {
-                      await cartProvider.updateCartItemQuantity(
-                        lineItemId: line.id,
-                        quantity: 0,
-                      );
                       _analytics.trackProductRemovedFromCart(
                         productId: merchandise.id,
                         productTitle: line.productTitle,
                         quantity: 1,
+                      );
+                      await cartProvider.updateCartItemQuantity(
+                        lineItemId: line.id,
+                        quantity: 0,
                       );
                     }
                   },
@@ -558,6 +512,12 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 GestureDetector(
                   onTap: () async {
+                    _analytics.trackCartItemQuantityUpdated(
+                      productId: merchandise.id,
+                      productTitle: line.productTitle,
+                      oldQuantity: line.quantity,
+                      newQuantity: line.quantity + 1,
+                    );
                     await cartProvider.updateCartItemQuantity(
                       lineItemId: line.id,
                       quantity: line.quantity + 1,
@@ -593,11 +553,11 @@ class _CartScreenState extends State<CartScreen> {
       child: Text(
         'You are saving ${PriceUtils.formatPriceFromDouble(totalSavings)} on this purchase',
         textAlign: TextAlign.center,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 14,
+        style: AppTextStyles.bodySmall(
+          color: colors
+              .contentPrimary, // Assuming text should be readable on success color
           fontWeight: FontWeight.w500,
-        ),
+        ).copyWith(color: Colors.white),
       ),
     );
   }
@@ -620,7 +580,7 @@ class _CartScreenState extends State<CartScreen> {
             Icon(
               Icons.local_offer_outlined,
               size: 22,
-              color: AppColors.ctaOrange,
+              color: colors.discountOrange,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -631,7 +591,7 @@ class _CartScreenState extends State<CartScreen> {
                         Text(
                           'Coupon Applied: $_appliedCoupon',
                           style: AppTextStyles.roboto14SemiBold(
-                            color: AppColors.lightSuccess,
+                            color: colors.success,
                           ),
                         ),
                         Text(
@@ -689,11 +649,9 @@ class _CartScreenState extends State<CartScreen> {
         children: [
           Text(
             'Order Summary ($itemCount items)',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
+            style: AppTextStyles.headingSmall(
               color: colors.contentPrimary,
-            ),
+            ).copyWith(fontSize: 16, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 16),
           _buildSummaryRow(
@@ -708,7 +666,7 @@ class _CartScreenState extends State<CartScreen> {
             _buildSummaryRow(
               'Total Discount',
               '- ${PriceUtils.formatPriceFromDouble(totalDiscount)}',
-              valueColor: AppColors.lightSuccess,
+              valueColor: colors.success,
             ),
             const SizedBox(height: 10),
           ],
@@ -718,16 +676,14 @@ class _CartScreenState extends State<CartScreen> {
             children: [
               Text(
                 'Payable Amount',
-                style: TextStyle(
-                  fontSize: 16,
+                style: AppTextStyles.bodyLarge(
                   fontWeight: FontWeight.w700,
                   color: colors.contentPrimary,
-                ),
+                ).copyWith(fontSize: 16),
               ),
               Text(
                 PriceUtils.formatPriceFromDouble(payable > 0 ? payable : 0),
-                style: TextStyle(
-                  fontSize: 18,
+                style: AppTextStyles.bodyLarge(
                   fontWeight: FontWeight.w700,
                   color: colors.contentPrimary,
                 ),
@@ -796,7 +752,7 @@ class _CartScreenState extends State<CartScreen> {
           Container(
             padding: const EdgeInsets.all(2),
             decoration: BoxDecoration(
-              color: AppColors.tokenStarYellow,
+              color: colors.ratingStar,
               shape: BoxShape.circle,
             ),
             child: const Icon(
@@ -820,10 +776,11 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget _buildContinueButton() {
+    final colors = AppColors.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.ctaOrange,
+        color: colors.discountOrange,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
       ),
       child: SafeArea(
@@ -838,16 +795,18 @@ class _CartScreenState extends State<CartScreen> {
                   cartProvider.cart!.cost?.totalAmount?.amountAsDouble ?? 0.0,
               discount: cartProvider.cart!.totalDiscount + _couponDiscount,
             );
-            ToastUtils.showSuccess('Proceeding to checkout...');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const OrderSuccessScreen()),
+            );
           },
           child: Container(
             height: 24,
             alignment: Alignment.center,
-            child: const Text(
+            child: Text(
               'Continue',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
+              style: AppTextStyles.bodyLarge(
+                color: colors.backgroundPrimary,
                 fontWeight: FontWeight.w600,
               ),
             ),

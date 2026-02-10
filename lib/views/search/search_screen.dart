@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_text_styles.dart';
+import '../../core/design_system/design_system.dart';
+import '../../core/services/analytics_service.dart';
 import '../../providers/products_provider.dart';
-import '../../widgets/product_card_horizontal.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -12,6 +14,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final AnalyticsService _analytics = AnalyticsService();
   final _searchController = TextEditingController();
   bool _hasSearched = false;
 
@@ -32,10 +35,19 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _performSearch(String query) {
+    if (query.isEmpty) {
+      setState(() => _hasSearched = false);
+      return;
+    }
+    _analytics.trackSearchInitiated(query);
     final productsProvider =
         Provider.of<ProductsProvider>(context, listen: false);
     productsProvider.searchProducts(query);
-    setState(() => _hasSearched = query.isNotEmpty);
+    _analytics.trackSearchResultsViewed(
+      query: query,
+      resultCount: productsProvider.searchResults.length,
+    );
+    setState(() => _hasSearched = true);
   }
 
   @override
@@ -56,9 +68,8 @@ class _SearchScreenState extends State<SearchScreen> {
             autofocus: true,
             decoration: InputDecoration(
               hintText: 'Search for medicine & health products',
-              hintStyle: TextStyle(
+              hintStyle: AppTextStyles.bodyDefault(
                 color: colors.contentSecondary,
-                fontSize: 14,
               ),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
@@ -89,7 +100,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return Consumer<ProductsProvider>(
       builder: (context, productsProvider, _) {
         if (productsProvider.isLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return AppLoading.page();
         }
 
         if (!_hasSearched) {
@@ -99,32 +110,7 @@ class _SearchScreenState extends State<SearchScreen> {
         final results = productsProvider.searchResults;
 
         if (results.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.search_off,
-                    size: 64, color: colors.contentSecondary),
-                const SizedBox(height: 16),
-                Text(
-                  'No results found',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: colors.contentPrimary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Try searching for something else',
-                  style: TextStyle(
-                    color: colors.contentSecondary,
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          );
+          return AppEmptyStates.searchResults();
         }
 
         return ListView.builder(
@@ -158,11 +144,9 @@ class _SearchScreenState extends State<SearchScreen> {
         children: [
           Text(
             'Popular Searches',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
+            style: AppTextStyles.headingMedium(
               color: colors.contentPrimary,
-            ),
+            ).copyWith(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),
           Wrap(
@@ -171,6 +155,8 @@ class _SearchScreenState extends State<SearchScreen> {
             children: suggestions.map((suggestion) {
               return GestureDetector(
                 onTap: () {
+                  _analytics.trackSearchSuggestionClicked(
+                      suggestion: suggestion);
                   _searchController.text = suggestion;
                   _performSearch(suggestion);
                 },
@@ -184,10 +170,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   child: Text(
                     suggestion,
-                    style: TextStyle(
+                    style: AppTextStyles.roboto12Medium(
                       color: colors.contentPrimary,
-                      fontSize: 13,
-                    ),
+                    ).copyWith(fontSize: 13),
                   ),
                 ),
               );

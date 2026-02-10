@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../core/theme/app_colors.dart';
-import '../providers/cart_provider.dart';
-import '../views/search/search_screen.dart';
-import '../views/cart/cart_screen.dart';
+import 'package:medihub/core/design_system/design_system.dart';
+import 'package:medihub/core/theme/app_colors.dart';
+import 'package:medihub/core/theme/app_text_styles.dart';
+import 'package:medihub/views/cart/cart_screen.dart';
+import 'package:medihub/views/search/search_screen.dart';
 
 class HomeHeader extends StatelessWidget {
   final String deliveryAddress;
@@ -33,15 +33,14 @@ class HomeHeader extends StatelessWidget {
                 children: [
                   const Icon(
                     Icons.location_on,
-                    color: Colors.white,
+                    color: Color(0xFFFFFFFF),
                     size: 20,
                   ),
                   const SizedBox(width: 4),
-                  const Text(
+                  Text(
                     'Delivery to ',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 12,
+                    style: AppTextStyles.roboto12Regular(
+                      color: const Color(0xFFFFFFFF).withValues(alpha: 0.7),
                     ),
                   ),
                   Expanded(
@@ -53,17 +52,15 @@ class HomeHeader extends StatelessWidget {
                           Flexible(
                             child: Text(
                               deliveryAddress,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
+                              style: AppTextStyles.roboto12Medium(
+                                color: const Color(0xFFFFFFFF),
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           const Icon(
                             Icons.arrow_drop_down,
-                            color: Colors.white,
+                            color: Color(0xFFFFFFFF),
                             size: 20,
                           ),
                         ],
@@ -71,54 +68,20 @@ class HomeHeader extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
-                  Consumer<CartProvider>(
-                    builder: (context, cartProvider, _) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const CartScreen(),
-                            ),
-                          );
-                        },
-                        child: Stack(
-                          children: [
-                            const Icon(
-                              Icons.shopping_cart_outlined,
-                              color: Colors.white,
-                              size: 24,
-                            ),
-                            if (cartProvider.cartCount > 0)
-                              Positioned(
-                                right: 0,
-                                top: 0,
-                                child: Container(
-                                  padding: const EdgeInsets.all(2),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.red,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  constraints: const BoxConstraints(
-                                    minWidth: 14,
-                                    minHeight: 14,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      '${cartProvider.cartCount > 9 ? '9+' : cartProvider.cartCount}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 8,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                          ],
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const CartScreen(),
                         ),
                       );
                     },
+                    child: const CartIconBadge(
+                      icon: Icons.shopping_cart_outlined,
+                      color: Color(0xFFFFFFFF),
+                      size: 24,
+                    ),
                   ),
                 ],
               ),
@@ -149,10 +112,8 @@ class HomeHeader extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         'Search for medicine & health products',
-                        style: TextStyle(
-                          color: colors.contentSecondary,
-                          fontSize: 14,
-                        ),
+                        style: AppTextStyles.bodySmall(
+                            color: colors.contentSecondary),
                       ),
                     ],
                   ),

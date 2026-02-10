@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../providers/cart_provider.dart';
 import '../../core/services/analytics_service.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_text_styles.dart';
 import '../main_shell.dart';
 
 class OrderSuccessScreen extends StatefulWidget {
@@ -52,7 +53,6 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final colors = AppColors.of(context);
 
     return Scaffold(
@@ -71,12 +71,12 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                   width: 120,
                   height: 120,
                   decoration: BoxDecoration(
-                    color: Colors.green.withValues(alpha: 0.1),
+                    color: colors.success.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.check_circle,
-                    color: Colors.green,
+                    color: colors.success,
                     size: 80,
                   ),
                 ),
@@ -86,9 +86,9 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
 
               Text(
                 'Order Placed Successfully!',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppTextStyles.headingMedium(
+                  color: colors.contentPrimary,
+                ).copyWith(fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
 
@@ -96,7 +96,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
 
               Text(
                 'Thank you for your order.\nWe\'ll send you a confirmation email shortly.',
-                style: theme.textTheme.bodyLarge?.copyWith(
+                style: AppTextStyles.bodyLarge(
                   color: colors.contentSecondary,
                 ),
                 textAlign: TextAlign.center,
@@ -143,7 +143,8 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                 height: 56,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navigate to homepage and clear all previous routes
+                    _analytics.trackContinueShoppingClicked(
+                        source: 'order_success');
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (_) => const MainShell()),
                       (route) => false,
@@ -194,18 +195,17 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
             children: [
               Text(
                 label,
-                style: TextStyle(
-                  fontSize: 12,
+                style: AppTextStyles.roboto12Regular(
                   color: colors.contentSecondary,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 value,
-                style: const TextStyle(
-                  fontSize: 16,
+                style: AppTextStyles.bodyLarge(
                   fontWeight: FontWeight.w600,
-                ),
+                  color: colors.contentPrimary,
+                ).copyWith(fontSize: 16),
               ),
             ],
           ),

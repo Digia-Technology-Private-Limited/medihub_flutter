@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../core/theme/app_colors.dart';
+import 'package:medihub/core/theme/app_colors.dart';
 
 class ExpandableSection extends StatefulWidget {
   final String title;

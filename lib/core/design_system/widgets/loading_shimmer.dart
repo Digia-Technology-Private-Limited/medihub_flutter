@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medihub/core/theme/app_colors.dart';
 import 'package:shimmer/shimmer.dart';
-import '../core/theme/app_colors.dart';
 
 class LoadingShimmer extends StatelessWidget {
   final double width;
@@ -46,7 +46,7 @@ class ProductCardShimmer extends StatelessWidget {
         children: [
           const LoadingShimmer(
               width: 180,
-              height: 200,
+              height: 160,
               borderRadius: BorderRadius.all(Radius.circular(8))),
           const SizedBox(height: 8),
           const LoadingShimmer(width: 120, height: 16),

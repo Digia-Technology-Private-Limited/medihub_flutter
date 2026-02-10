@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:medihub/core/design_system/icons/cart_icon_badge.dart';
+import 'package:medihub/providers/theme_provider.dart';
+import 'package:medihub/views/cart/cart_screen.dart';
+import 'package:medihub/views/search/search_screen.dart';
 import 'package:provider/provider.dart';
-import '../providers/cart_provider.dart';
-import '../providers/theme_provider.dart';
-import '../views/search/search_screen.dart';
-import '../views/cart/cart_screen.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
@@ -28,8 +28,6 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cartProvider = Provider.of<CartProvider>(context);
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return AppBar(
@@ -59,44 +57,17 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
             },
           ),
         if (showCart)
-          Stack(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.shopping_cart_outlined),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const CartScreen()),
-                  );
-                },
-              ),
-              if (cartProvider.cartCount > 0)
-                Positioned(
-                  right: 8,
-                  top: 8,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.error,
-                      shape: BoxShape.circle,
-                    ),
-                    constraints: const BoxConstraints(
-                      minWidth: 18,
-                      minHeight: 18,
-                    ),
-                    child: Center(
-                      child: Text(
-                        '${cartProvider.cartCount > 9 ? '9+' : cartProvider.cartCount}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-            ],
+          IconButton(
+            icon: const CartIconBadge(
+              icon: Icons.shopping_cart_outlined,
+              size: 24,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CartScreen()),
+              );
+            },
           ),
         const SizedBox(width: 8),
       ],

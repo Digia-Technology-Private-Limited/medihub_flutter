@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:medihub/core/design_system/widgets/app_bar_widget.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_colors.dart';
-import '../../widgets/brand_card.dart';
-import '../../widgets/app_bar_widget.dart';
+import '../../core/services/analytics_service.dart';
+import 'package:provider/provider.dart';
+import '../../providers/products_provider.dart';
+import '../../core/design_system/widgets/brand_card.dart';
 import '../product_listing/product_listing_screen.dart';
 
 class BrandsScreen extends StatelessWidget {
@@ -10,6 +13,7 @@ class BrandsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final analytics = AnalyticsService();
     final brands = AppConstants.topBrands;
     final colors = AppColors.of(context);
 
@@ -34,12 +38,32 @@ class BrandsScreen extends StatelessWidget {
           return BrandCard(
             title: brand['title']!,
             imageUrl: brand['imageUrl']!,
-            onTap: () {
+            onTap: () async {
+              final brandTitle = brand['title']!;
+              final brandHandle = brand['handle']!;
+
+              final productsProvider =
+                  Provider.of<ProductsProvider>(context, listen: false);
+
+              // Filter products by title containing brand name (matching JS logic)
+              final filteredProducts = productsProvider.allProducts
+                  .where((product) => product.title
+                      .toLowerCase()
+                      .contains(brandTitle.toLowerCase()))
+                  .toList();
+
+              if (!context.mounted) return;
+
+              analytics.trackBrandClicked(
+                brandName: brandTitle,
+                brandHandle: brandHandle,
+              );
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (_) => ProductListingScreen(
-                    collectionHandle: brand['handle'],
+                    products: filteredProducts,
+                    title: brandTitle,
                   ),
                 ),
               );

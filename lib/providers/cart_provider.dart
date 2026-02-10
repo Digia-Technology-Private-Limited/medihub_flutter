@@ -139,9 +139,6 @@ class CartProvider extends ChangeNotifier {
     if (_cart == null) return false;
 
     try {
-      _isLoading = true;
-      notifyListeners();
-
       final response = await _apiService.updateCartItems(
         cartId: _cart!.id,
         lineItemId: lineItemId,
@@ -171,7 +168,6 @@ class CartProvider extends ChangeNotifier {
       ToastUtils.showError('Error updating cart: $e');
       return false;
     } finally {
-      _isLoading = false;
       notifyListeners();
     }
   }
