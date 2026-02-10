@@ -1,0 +1,41 @@
+name: medihub
+description: A professional e-commerce app for MediHub health and fitness products.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State Management
+  provider: ^6.1.0
+
+  # Networking
+  http: ^1.2.0
+  intl: ^0.19.0
+
+  # Local Storage
+  shared_preferences: ^2.2.0
+
+  # UI Components
+  google_fonts: ^6.1.0
+  cached_network_image: ^3.3.0
+  shimmer: ^3.0.0
+  fluttertoast: ^8.2.0
+
+  # Analytics
+  clevertap_plugin: ^3.6.0
+  flutter_svg: ^2.2.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.0
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
