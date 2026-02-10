@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/theme/app_colors.dart';
+import '../core/services/analytics_service.dart';
 import '../providers/cart_provider.dart';
 import 'homepage/homepage_screen.dart';
 import 'brands/brands_screen.dart';
@@ -15,6 +16,7 @@ class MainShell extends StatefulWidget {
 }
 
 class _MainShellState extends State<MainShell> {
+  final AnalyticsService _analytics = AnalyticsService();
   int _currentIndex = 0;
 
   final List<Widget> _screens = const [
@@ -46,6 +48,7 @@ class _MainShellState extends State<MainShell> {
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (index) {
+            if (index == 3) _analytics.trackHomeLanded();
             setState(() {
               _currentIndex = index;
             });

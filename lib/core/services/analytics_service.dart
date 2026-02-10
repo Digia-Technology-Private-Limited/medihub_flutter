@@ -58,6 +58,10 @@ class AnalyticsService {
     _trackEvent('screen_viewed', {'screen_name': screenName});
   }
 
+  void trackHomeLanded() {
+    _trackEvent('9home_landed', {});
+  }
+
   // ─────────────────────────────────────────────────────────────────
   // PRODUCT EVENTS
   // ─────────────────────────────────────────────────────────────────

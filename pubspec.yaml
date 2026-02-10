@@ -36,6 +36,14 @@ dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.3.0
   flutter_lints: ^6.0.0
+  digia_ui:
+    git:
+      url: https://github.com/Digia-Technology-Private-Limited/digia_ui.git
+      ref: uiActions
+  digiaclevertap:
+    git:
+      url: https://github.com/Digia-Technology-Private-Limited/digia_clevertap_flutter.git
+      ref: main
 
 flutter:
   uses-material-design: true

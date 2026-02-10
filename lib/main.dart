@@ -8,6 +8,8 @@ import 'providers/products_provider.dart';
 
 import 'providers/address_provider.dart';
 import 'views/main_shell.dart';
+import 'package:digiaclevertap/digia_clevertap_widget.dart';
+import 'package:digia_ui/digia_ui.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,8 +17,19 @@ void main() async {
   final themeProvider = ThemeProvider();
   await themeProvider.initialize();
   await AnalyticsService().initialize();
+  final digiaUI = await DigiaUI.initialize(
+    DigiaUIOptions(
+      accessKey: '697b13250753c105e4cb83a7',
+      flavor: Flavor.debug(),
+    ),
+  );
 
-  runApp(MediHubApp(themeProvider: themeProvider));
+  runApp(
+    DigiaUIApp(
+      digiaUI: digiaUI,
+      builder: (context) => MediHubApp(themeProvider: themeProvider),
+    ),
+  );
 }
 
 class MediHubApp extends StatelessWidget {
@@ -42,7 +55,7 @@ class MediHubApp extends StatelessWidget {
             darkTheme: AppTheme.darkTheme,
             themeMode:
                 themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-            home: const MainShell(),
+            home: DigiaClevertapWidget(child: const MainShell()),
           );
         },
       ),
