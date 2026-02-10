@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medihub/core/services/analytics_service.dart';
 import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'providers/theme_provider.dart';
@@ -13,9 +14,7 @@ void main() async {
 
   final themeProvider = ThemeProvider();
   await themeProvider.initialize();
-
-  // TODO: Enable once UI is finalized.
-  // await AnalyticsService().initialize();
+  await AnalyticsService().initialize();
 
   runApp(MediHubApp(themeProvider: themeProvider));
 }
