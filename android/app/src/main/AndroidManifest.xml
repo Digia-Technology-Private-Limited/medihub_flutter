@@ -2,25 +2,12 @@
 
     <!-- Required to allow the app to send events and user profile information -->
     <uses-permission android:name="android.permission.INTERNET"/>
-    <!-- Recommended so that CleverTap knows when to attempt a network call -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:label="medihub_template"
-        android:name="${applicationName}"
+        android:name=".MainApplication"
         android:icon="@mipmap/ic_launcher">
-
-        <!-- CleverTap Configuration -->
-        <meta-data
-            android:name="CLEVERTAP_ACCOUNT_ID"
-            android:value="TEST-K55-K6R-847Z"/>
-        <meta-data
-            android:name="CLEVERTAP_TOKEN"
-            android:value="TEST-263-553"/>
-        <meta-data
-            android:name="CLEVERTAP_REGION"
-            android:value="in1"/>
-
         <activity
             android:name=".MainActivity"
             android:exported="true"

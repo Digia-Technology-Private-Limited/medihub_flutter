@@ -867,16 +867,16 @@ class _PDPScreenState extends State<PDPScreen> {
                       Provider.of<CartProvider>(context, listen: false);
                   await cartProvider.addToCart(variantId: _selectedVariant!.id);
                   if (mounted) {
-                    _analytics.trackCartViewed(
-                      itemCount: cartProvider.cartCount,
-                      totalValue: cartProvider
-                              .cart?.cost?.totalAmount?.amountAsDouble ??
-                          0.0,
-                    );
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const CartScreen()),
-                    );
+                    // _analytics.trackCartViewed(
+                    //   itemCount: cartProvider.cartCount,
+                    //   totalValue: cartProvider
+                    //           .cart?.cost?.totalAmount?.amountAsDouble ??
+                    //       0.0,
+                    // );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (_) => const CartScreen()),
+                    // );
                   }
                 }
               },

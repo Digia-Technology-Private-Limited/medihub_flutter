@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medihub/core/services/digia_service.dart';
 import 'package:provider/provider.dart';
 import '../core/theme/app_colors.dart';
 import '../core/services/analytics_service.dart';
@@ -32,7 +33,6 @@ class _MainShellState extends State<MainShell> {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
-
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
@@ -63,6 +63,8 @@ class _MainShellState extends State<MainShell> {
                 totalValue:
                     cartProvider.cart?.cost?.totalAmount?.amountAsDouble ?? 0.0,
               );
+              DigiaService.moEngage?.trackEvent('Button Clicked');
+              DigiaService.moEngage?.getSelfHandledInApp();
             }
             setState(() {
               _currentIndex = index;

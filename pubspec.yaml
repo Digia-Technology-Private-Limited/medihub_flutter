@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.3.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -27,18 +27,18 @@ dependencies:
   fluttertoast: ^8.2.0
 
   # Analytics
-  clevertap_plugin: ^3.6.0
   flutter_svg: ^2.2.3
 
-  # Digia
+  # Digia SDK — server-driven UI + CEP overlay engine
   digia_ui:
-    git:
-      url: https://github.com/Digia-Technology-Private-Limited/digia_ui.git
-      ref: uiActions
-  digiaclevertap:
-    git:
-      url: https://github.com/Digia-Technology-Private-Limited/digia_clevertap_flutter.git
-      ref: main
+    path: ../digia_engage/flutter
+
+  # MoEngage CEP plugin for Digia
+  digia_moengage_plugin:
+    path: ../digia_moengage_plugin
+
+  # MoEngage Flutter SDK (direct dep so MoEngageFlutter can be used in app code)
+  moengage_flutter: ^10.5.0
 
 dev_dependencies:
   flutter_test:

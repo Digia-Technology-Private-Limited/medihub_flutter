@@ -42,3 +42,15 @@ android {
 flutter {
     source = "../.."
 }
+
+
+	dependencies {
+    // Import the MoEngage BOM
+    implementation(platform("com.moengage:android-bom:1.5.1"))
+    
+    // Add optional modules as needed
+     implementation("com.moengage:inapp")
+     	implementation("androidx.core:core:1.6.0")
+implementation("androidx.appcompat:appcompat:1.3.1")
+implementation("androidx.lifecycle:lifecycle-process:2.7.0")
+}
