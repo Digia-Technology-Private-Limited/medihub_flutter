@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:clevertap_plugin/clevertap_plugin.dart';
+import 'package:medihub/core/services/digia_service.dart';
+import 'package:moengage_flutter/moengage_flutter.dart';
+// import 'package:clevertap_plugin/clevertap_plugin.dart';
 
 /// Analytics service for tracking user events via CleverTap.
 /// Uses singleton pattern for app-wide access.
@@ -17,7 +19,7 @@ class AnalyticsService {
     // CleverTap is auto-initialized from native config
     // Enable debug mode in development
     if (kDebugMode) {
-      CleverTapPlugin.setDebugLevel(3);
+      // CleverTapPlugin.setDebugLevel(3);
     }
 
     _isInitialized = true;
@@ -42,10 +44,29 @@ class AnalyticsService {
 
     final enrichedProperties = {
       ...properties,
-      'timestamp': DateTime.now().toIso8601String(),
+      'timestamp': DateTime.now(),
     };
 
-    CleverTapPlugin.recordEvent(eventName, enrichedProperties);
+    final moeProperties = MoEProperties();
+
+    enrichedProperties.forEach((key, value) {
+      if (value is String) {
+        moeProperties.addAttribute(key, value);
+      } else if (value is int) {
+        moeProperties.addAttribute(key, value);
+      } else if (value is double) {
+        moeProperties.addAttribute(key, value);
+      } else if (value is bool) {
+        moeProperties.addAttribute(key, value);
+      } else if (value is DateTime) {
+        moeProperties.addISODateTime(key, value.toIso8601String());
+      } else {
+        moeProperties.addAttribute(key, value.toString());
+      }
+    });
+
+    DigiaService.moEngage?.trackEvent(eventName, moeProperties);
+
     _log('Event: $eventName');
   }
 
