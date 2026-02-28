@@ -1,13 +1,17 @@
+import 'package:digia_ui/digia_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../core/theme/app_colors.dart';
-import '../core/services/analytics_service.dart';
-import '../providers/cart_provider.dart';
-import 'homepage/homepage_screen.dart';
-import 'brands/brands_screen.dart';
-import 'account/account_screen.dart';
-import 'cart/cart_screen.dart';
+
+import '../core/constants/digia_screen_ids.dart';
 import '../core/design_system/design_system.dart';
+import '../core/services/analytics_service.dart';
+import '../core/theme/app_colors.dart';
+import '../providers/cart_provider.dart';
+import 'account/account_screen.dart';
+import 'brands/brands_screen.dart';
+import 'cart/cart_screen.dart';
+import 'digiatest/digia_test_screen.dart';
+import 'homepage/homepage_screen.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -21,6 +25,12 @@ class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
 
   static const _tabNames = ['Home', 'Brands', 'Account', 'Cart'];
+  static const _tabScreenIds = [
+    DigiaScreenIds.home,
+    DigiaScreenIds.brands,
+    DigiaScreenIds.account,
+    DigiaScreenIds.cart,
+  ];
 
   final List<Widget> _screens = const [
     HomepageScreen(),
@@ -28,6 +38,12 @@ class _MainShellState extends State<MainShell> {
     AccountScreen(),
     CartScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    Digia.setCurrentScreen(_tabScreenIds[_currentIndex]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +54,23 @@ class _MainShellState extends State<MainShell> {
         index: _currentIndex,
         children: _screens,
       ),
+      floatingActionButton: _currentIndex == 0
+          ? FloatingActionButton(
+              onPressed: () {
+                _analytics.logDigiaProbe(
+                  'Opening DigiaTestScreen from MainShell FAB',
+                );
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    settings:
+                        const RouteSettings(name: DigiaScreenIds.digiaTest),
+                    builder: (_) => const DigiaTestScreen(),
+                  ),
+                );
+              },
+              child: const Icon(Icons.bug_report),
+            )
+          : null,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           boxShadow: [
@@ -64,6 +97,11 @@ class _MainShellState extends State<MainShell> {
                     cartProvider.cart?.cost?.totalAmount?.amountAsDouble ?? 0.0,
               );
             }
+            if (index == 2) {
+              _analytics.trackAccountViewed();
+            }
+
+            Digia.setCurrentScreen(_tabScreenIds[index]);
             setState(() {
               _currentIndex = index;
             });

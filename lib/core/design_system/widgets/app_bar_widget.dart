@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medihub/core/constants/digia_screen_ids.dart';
 import 'package:medihub/core/design_system/icons/cart_icon_badge.dart';
 import 'package:medihub/providers/theme_provider.dart';
 import 'package:medihub/views/cart/cart_screen.dart';
@@ -52,7 +53,10 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const SearchScreen()),
+                MaterialPageRoute(
+                  settings: const RouteSettings(name: DigiaScreenIds.search),
+                  builder: (_) => const SearchScreen(),
+                ),
               );
             },
           ),
@@ -65,7 +69,10 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const CartScreen()),
+                MaterialPageRoute(
+                  settings: const RouteSettings(name: DigiaScreenIds.cart),
+                  builder: (_) => const CartScreen(),
+                ),
               );
             },
           ),

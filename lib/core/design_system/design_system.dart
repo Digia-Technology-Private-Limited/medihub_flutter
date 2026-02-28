@@ -1,7 +1,7 @@
-/// Design System - Reusable UI Components
-///
-/// Centralized design system for consistent UI across the app.
-/// All reusable widgets, icons, and components live here.
+// Design System - Reusable UI Components
+//
+// Centralized design system for consistent UI across the app.
+// All reusable widgets, icons, and components live here.
 
 // Icons
 export 'icons/cart_icon_badge.dart';

@@ -34,6 +34,10 @@ class AnalyticsService {
     }
   }
 
+  void logDigiaProbe(String message) {
+    _log('[DIGIA_PROBE] $message');
+  }
+
   void _trackEvent(String eventName, Map<String, dynamic> properties) {
     if (!_isInitialized) {
       _log('Warning: Attempted to track event before initialization');
@@ -46,7 +50,9 @@ class AnalyticsService {
     };
 
     CleverTapPlugin.recordEvent(eventName, enrichedProperties);
-    _log('Event: $eventName');
+    _log(
+      'Event: $eventName props=$enrichedProperties (current flow: App -> CleverTap SDK -> Digia CEP callbacks)',
+    );
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -171,6 +177,14 @@ class AnalyticsService {
       'product_id': productId,
       'product_title': productTitle,
     });
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // ACCOUNT EVENTS
+  // ─────────────────────────────────────────────────────────────────
+
+  void trackAccountViewed() {
+    _trackEvent('accountPage_opened', {});
   }
 
   // ─────────────────────────────────────────────────────────────────

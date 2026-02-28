@@ -8,6 +8,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/price_utils.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/constants/digia_screen_ids.dart';
 import '../../core/utils/toast_utils.dart';
 import '../../core/design_system/design_system.dart';
 
@@ -797,7 +798,11 @@ class _CartScreenState extends State<CartScreen> {
             );
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const OrderSuccessScreen()),
+              MaterialPageRoute(
+                settings:
+                    const RouteSettings(name: DigiaScreenIds.orderSuccess),
+                builder: (_) => const OrderSuccessScreen(),
+              ),
             );
           },
           child: Container(

@@ -1,0 +1,36 @@
+{
+  "Digia": {
+    "type": "template",
+    "arguments": {
+      "viewId": {
+        "type": "string",
+        "value": ""
+      },
+      "args": {
+        "type": "string",
+        "value": "{}"
+      }
+    }
+  },
+  "digia_temp2": {
+    "type": "template",
+    "arguments": {
+      "screenId": {
+        "type": "string",
+        "value": ""
+      },
+      "command": {
+        "type": "string",
+        "value": ""
+      },
+      "viewId": {
+        "type": "string",
+        "value": ""
+      },
+      "args": {
+        "type": "string",
+        "value": "{}"
+      }
+    }
+  }
+}

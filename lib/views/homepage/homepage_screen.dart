@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/constants/digia_screen_ids.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/services/analytics_service.dart';
@@ -9,6 +10,7 @@ import '../../providers/address_provider.dart';
 import '../../models/product.dart';
 import '../../core/design_system/design_system.dart';
 import '../product_listing/product_listing_screen.dart';
+import 'package:digia_ui/digia_ui.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});
@@ -84,6 +86,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         const SizedBox(height: 16),
                         _buildCategoryChips(collections),
                         const SizedBox(height: 24),
+                        const DigiaSlot(AppConstants.digiaHomepageSlotKey),
+                        const SizedBox(height: 16),
                         ...collections.map((collection) => Padding(
                               padding: const EdgeInsets.only(bottom: 24),
                               child: _CollectionProductSection(
@@ -126,6 +130,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
+                    settings: const RouteSettings(
+                      name: DigiaScreenIds.productListing,
+                    ),
                     builder: (_) => ProductListingScreen(
                       collectionHandle: collection.handle,
                     ),
@@ -211,6 +218,9 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
+                      settings: const RouteSettings(
+                        name: DigiaScreenIds.productListing,
+                      ),
                       builder: (_) => ProductListingScreen(
                         products: filteredProducts,
                         title: brandTitle,
@@ -271,6 +281,9 @@ class _CollectionProductSectionState extends State<_CollectionProductSection> {
             Navigator.push(
               context,
               MaterialPageRoute(
+                settings: const RouteSettings(
+                  name: DigiaScreenIds.productListing,
+                ),
                 builder: (_) => ProductListingScreen(
                   collectionHandle: widget.collection.handle,
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medihub/core/constants/digia_screen_ids.dart';
 import 'package:medihub/core/design_system/design_system.dart';
 import 'package:medihub/core/services/analytics_service.dart';
 import 'package:medihub/core/theme/app_colors.dart';
@@ -39,6 +40,7 @@ class _ProductCardState extends State<ProductCard> {
         Navigator.push(
           context,
           MaterialPageRoute(
+            settings: const RouteSettings(name: DigiaScreenIds.productDetail),
             builder: (_) => PDPScreen(productHandle: widget.product.handle),
           ),
         );

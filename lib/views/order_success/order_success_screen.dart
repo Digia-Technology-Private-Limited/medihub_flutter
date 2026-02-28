@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/cart_provider.dart';
 import '../../core/services/analytics_service.dart';
+import '../../core/constants/digia_screen_ids.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../main_shell.dart';
@@ -22,7 +23,6 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
   @override
   void initState() {
     super.initState();
-
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
 
     _analytics.trackOrderPlaced(
@@ -146,7 +146,11 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                     _analytics.trackContinueShoppingClicked(
                         source: 'order_success');
                     Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (_) => const MainShell()),
+                      MaterialPageRoute(
+                        settings:
+                            const RouteSettings(name: DigiaScreenIds.home),
+                        builder: (_) => const MainShell(),
+                      ),
                       (route) => false,
                     );
                   },

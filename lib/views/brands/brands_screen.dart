@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medihub/core/design_system/widgets/app_bar_widget.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/constants/digia_screen_ids.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/services/analytics_service.dart';
 import 'package:provider/provider.dart';
@@ -61,6 +62,9 @@ class BrandsScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
+                  settings: const RouteSettings(
+                    name: DigiaScreenIds.productListing,
+                  ),
                   builder: (_) => ProductListingScreen(
                     products: filteredProducts,
                     title: brandTitle,

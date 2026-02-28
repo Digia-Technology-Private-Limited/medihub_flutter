@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:medihub/core/design_system/design_system.dart';
+import 'package:medihub/core/constants/digia_screen_ids.dart';
 import 'package:medihub/core/theme/app_colors.dart';
 import 'package:medihub/core/theme/app_text_styles.dart';
-import 'package:medihub/views/cart/cart_screen.dart';
 import 'package:medihub/views/search/search_screen.dart';
 
 class HomeHeader extends StatelessWidget {
@@ -67,22 +66,6 @@ class HomeHeader extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Spacer(),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const CartScreen(),
-                        ),
-                      );
-                    },
-                    child: const CartIconBadge(
-                      icon: Icons.shopping_cart_outlined,
-                      color: Color(0xFFFFFFFF),
-                      size: 24,
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -92,7 +75,11 @@ class HomeHeader extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const SearchScreen()),
+                    MaterialPageRoute(
+                      settings:
+                          const RouteSettings(name: DigiaScreenIds.search),
+                      builder: (_) => const SearchScreen(),
+                    ),
                   );
                 },
                 child: Container(

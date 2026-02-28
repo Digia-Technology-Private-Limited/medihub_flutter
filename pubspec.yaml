@@ -27,24 +27,18 @@ dependencies:
   fluttertoast: ^8.2.0
 
   # Analytics
-  clevertap_plugin: ^3.6.0
+  clevertap_plugin: ^3.7.0
   flutter_svg: ^2.2.3
 
   # Digia
   digia_ui:
-    git:
-      url: https://github.com/Digia-Technology-Private-Limited/digia_ui.git
-      ref: uiActions
-  digiaclevertap:
-    git:
-      url: https://github.com/Digia-Technology-Private-Limited/digia_clevertap_flutter.git
-      ref: main
+    path: ../digia_engage/flutter
+  digia_clevertap:
+    path: ../digia_clevertap/flutter
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.13.1
-  flutter_native_splash: ^2.3.0
   flutter_lints: ^6.0.0
 
 flutter:

@@ -1,4 +1,8 @@
 class AppConstants {
+  static const String digiaProjectId = '698b1b7979d23afa242dcc7d';
+  static const String digiaHomepageSlotKey = 'digia_homepage_slot';
+  static const String digiaPdpSlotKey = 'digia_pdp_slot';
+
   // Carousel images for homepage banner
   static const List<String> carouselImages = [
     'https://res.cloudinary.com/digia/image/upload/v1756296956/Postpartum-Nutrition-Tips-Tampa-Doula_jibapj.jpg',

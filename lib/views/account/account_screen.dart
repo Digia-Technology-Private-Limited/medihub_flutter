@@ -46,7 +46,7 @@ class AccountScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Guest User',
+                          'Bruce Wayne',
                           style: AppTextStyles.bodyLarge(
                             color: colors.contentPrimary,
                             fontWeight: FontWeight.bold,
@@ -54,7 +54,7 @@ class AccountScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Sign in for best experience',
+                          'bruce@wayneenterprises.com',
                           style: AppTextStyles.bodySmall(
                               color: colors.contentSecondary),
                         ),

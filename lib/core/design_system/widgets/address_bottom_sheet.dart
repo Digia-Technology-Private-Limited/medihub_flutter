@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medihub/core/constants/digia_screen_ids.dart';
 import 'package:medihub/core/theme/app_colors.dart';
 import 'package:medihub/providers/address_provider.dart';
 import 'package:medihub/views/address/add_address_screen.dart';
@@ -136,6 +137,9 @@ class AddressBottomSheet extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
+                        settings: const RouteSettings(
+                          name: DigiaScreenIds.addAddress,
+                        ),
                         builder: (_) => const AddAddressScreen(),
                       ),
                     );

@@ -21,6 +21,10 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
+    _analytics.trackSearchResultsViewed(
+      query: '',
+      resultCount: 0,
+    );
     final productsProvider =
         Provider.of<ProductsProvider>(context, listen: false);
     if (productsProvider.allProducts.isEmpty) {

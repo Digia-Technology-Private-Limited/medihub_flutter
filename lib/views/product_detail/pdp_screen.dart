@@ -8,10 +8,12 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/price_utils.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/constants/digia_screen_ids.dart';
 import '../../core/services/analytics_service.dart';
 import '../../core/design_system/design_system.dart';
 import '../search/search_screen.dart';
 import '../cart/cart_screen.dart';
+import 'package:digia_ui/digia_ui.dart';
 
 class PDPScreen extends StatefulWidget {
   final String productHandle;
@@ -123,6 +125,8 @@ class _PDPScreenState extends State<PDPScreen> {
                   _buildImageGallery(),
                   _buildProductInfo(),
                   const SizedBox(height: 16),
+                  const DigiaSlot(AppConstants.digiaPdpSlotKey),
+                  const SizedBox(height: 16),
                   _buildVariantSelector(),
                   const SizedBox(height: 16),
                   _buildDeliveryServices(),
@@ -167,7 +171,10 @@ class _PDPScreenState extends State<PDPScreen> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const SearchScreen()),
+              MaterialPageRoute(
+                settings: const RouteSettings(name: DigiaScreenIds.search),
+                builder: (_) => const SearchScreen(),
+              ),
             );
           },
         ),
@@ -181,7 +188,11 @@ class _PDPScreenState extends State<PDPScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const CartScreen()),
+                      MaterialPageRoute(
+                        settings:
+                            const RouteSettings(name: DigiaScreenIds.cart),
+                        builder: (_) => const CartScreen(),
+                      ),
                     );
                   },
                 ),
@@ -875,7 +886,11 @@ class _PDPScreenState extends State<PDPScreen> {
                     );
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const CartScreen()),
+                      MaterialPageRoute(
+                        settings:
+                            const RouteSettings(name: DigiaScreenIds.cart),
+                        builder: (_) => const CartScreen(),
+                      ),
                     );
                   }
                 }
