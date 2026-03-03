@@ -13,7 +13,7 @@ import '../../core/services/analytics_service.dart';
 import '../../core/design_system/design_system.dart';
 import '../search/search_screen.dart';
 import '../cart/cart_screen.dart';
-import 'package:digia_ui/digia_ui.dart';
+import 'package:digia_engage/digia_engage.dart';
 
 class PDPScreen extends StatefulWidget {
   final String productHandle;
