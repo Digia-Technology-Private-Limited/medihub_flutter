@@ -31,7 +31,7 @@ dependencies:
   flutter_svg: ^2.2.3
 
   # Digia
-  digia_ui:
+  digia_engage:
     path: ../digia_engage/flutter
   digia_clevertap:
     path: ../digia_clevertap/flutter

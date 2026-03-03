@@ -1,5 +1,5 @@
 import 'package:digia_clevertap/digia_clevertap.dart';
-import 'package:digia_ui/digia_ui.dart';
+import 'package:digia_engage/digia_engage.dart';
 import 'package:flutter/material.dart';
 import 'package:medihub/core/services/analytics_service.dart';
 import 'package:provider/provider.dart';

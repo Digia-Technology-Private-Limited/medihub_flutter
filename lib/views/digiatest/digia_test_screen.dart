@@ -1,4 +1,4 @@
-import 'package:digia_ui/digia_ui.dart';
+import 'package:digia_engage/digia_engage.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/constants/app_constants.dart';
@@ -33,9 +33,7 @@ class _DigiaTestScreenState extends State<DigiaTestScreen> {
     final colors = AppColors.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Digia / CleverTap Test'),
-      ),
+      appBar: AppBar(title: const Text('Digia / CleverTap Test')),
       backgroundColor: colors.backgroundSecondary,
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -129,10 +127,7 @@ class _DigiaTestScreenState extends State<DigiaTestScreen> {
       padding: const EdgeInsets.only(bottom: 8),
       child: SizedBox(
         width: double.infinity,
-        child: ElevatedButton(
-          onPressed: onPressed,
-          child: Text(label),
-        ),
+        child: ElevatedButton(onPressed: onPressed, child: Text(label)),
       ),
     );
   }

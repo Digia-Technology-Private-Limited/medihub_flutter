@@ -1,4 +1,4 @@
-import 'package:digia_ui/digia_ui.dart';
+import 'package:digia_engage/digia_engage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -50,10 +50,7 @@ class _MainShellState extends State<MainShell> {
     final colors = AppColors.of(context);
 
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
-      ),
+      body: IndexedStack(index: _currentIndex, children: _screens),
       floatingActionButton: _currentIndex == 0
           ? FloatingActionButton(
               onPressed: () {
@@ -62,8 +59,9 @@ class _MainShellState extends State<MainShell> {
                 );
                 Navigator.of(context).push(
                   MaterialPageRoute<void>(
-                    settings:
-                        const RouteSettings(name: DigiaScreenIds.digiaTest),
+                    settings: const RouteSettings(
+                      name: DigiaScreenIds.digiaTest,
+                    ),
                     builder: (_) => const DigiaTestScreen(),
                   ),
                 );
@@ -89,8 +87,10 @@ class _MainShellState extends State<MainShell> {
               tabIndex: index,
             );
             if (index == 3) {
-              final cartProvider =
-                  Provider.of<CartProvider>(context, listen: false);
+              final cartProvider = Provider.of<CartProvider>(
+                context,
+                listen: false,
+              );
               _analytics.trackCartViewed(
                 itemCount: cartProvider.cartCount,
                 totalValue:

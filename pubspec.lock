@@ -176,6 +176,13 @@ packages:
       relative: true
     source: path
     version: "0.1.0"
+  digia_engage:
+    dependency: "direct main"
+    description:
+      path: "../digia_engage/flutter"
+      relative: true
+    source: path
+    version: "1.7.0"
   digia_expr:
     dependency: transitive
     description:
@@ -192,13 +199,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  digia_ui:
-    dependency: "direct main"
-    description:
-      path: "../digia_engage/flutter"
-      relative: true
-    source: path
-    version: "1.7.0"
   dio:
     dependency: transitive
     description:

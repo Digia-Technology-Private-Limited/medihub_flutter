@@ -1,18 +1,5 @@
 {
-  "Digia": {
-    "type": "template",
-    "arguments": {
-      "viewId": {
-        "type": "string",
-        "value": ""
-      },
-      "args": {
-        "type": "string",
-        "value": "{}"
-      }
-    }
-  },
-  "digia_temp2": {
+  "digia": {
     "type": "template",
     "arguments": {
       "screenId": {

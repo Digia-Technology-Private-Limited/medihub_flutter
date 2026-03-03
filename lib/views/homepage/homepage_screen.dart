@@ -10,7 +10,7 @@ import '../../providers/address_provider.dart';
 import '../../models/product.dart';
 import '../../core/design_system/design_system.dart';
 import '../product_listing/product_listing_screen.dart';
-import 'package:digia_ui/digia_ui.dart';
+import 'package:digia_engage/digia_engage.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});
