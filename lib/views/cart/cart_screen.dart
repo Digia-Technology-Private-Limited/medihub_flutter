@@ -800,7 +800,7 @@ class _CartScreenState extends State<CartScreen> {
               context,
               MaterialPageRoute(
                 settings:
-                    const RouteSettings(name: DigiaScreenIds.orderSuccess),
+                    const RouteSettings(name: ScreenIds.orderSuccess),
                 builder: (_) => const OrderSuccessScreen(),
               ),
             );

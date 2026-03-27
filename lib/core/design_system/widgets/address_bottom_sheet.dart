@@ -138,7 +138,7 @@ class AddressBottomSheet extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         settings: const RouteSettings(
-                          name: DigiaScreenIds.addAddress,
+                          name: ScreenIds.addAddress,
                         ),
                         builder: (_) => const AddAddressScreen(),
                       ),

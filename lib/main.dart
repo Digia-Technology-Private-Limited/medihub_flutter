@@ -1,5 +1,3 @@
-import 'package:digia_clevertap/digia_clevertap.dart';
-import 'package:digia_engage/digia_engage.dart';
 import 'package:flutter/material.dart';
 import 'package:medihub/core/services/analytics_service.dart';
 import 'package:provider/provider.dart';
@@ -19,20 +17,13 @@ Future<void> main() async {
   await AnalyticsService().initialize();
   AnalyticsService().trackAppOpened();
 
-  await Digia.initialize(
-    DigiaConfig(apiKey: '698b1b7979d23afa242dcc7d'),
-  );
-  Digia.register(CleverTapPlugin());
-
   runApp(MediHubApp(themeProvider: themeProvider));
 }
 
 class MediHubApp extends StatelessWidget {
-  MediHubApp({super.key, required this.themeProvider});
+  const MediHubApp({super.key, required this.themeProvider});
 
   final ThemeProvider themeProvider;
-  final DigiaNavigatorObserver _digiaNavigatorObserver =
-      DigiaNavigatorObserver();
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +43,6 @@ class MediHubApp extends StatelessWidget {
             darkTheme: AppTheme.darkTheme,
             themeMode:
                 themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-            navigatorObservers: [_digiaNavigatorObserver],
-            builder: (context, child) => DigiaHost(
-              child: child ?? const SizedBox.shrink(),
-            ),
             home: const MainShell(),
           );
         },

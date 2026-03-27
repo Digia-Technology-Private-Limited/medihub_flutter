@@ -1,5 +1,5 @@
-class DigiaScreenIds {
-  DigiaScreenIds._();
+class ScreenIds {
+  ScreenIds._();
 
   static const home = 'home-page';
   static const brands = 'brands-page';
@@ -10,5 +10,4 @@ class DigiaScreenIds {
   static const productDetail = 'product-detail-page';
   static const addAddress = 'add-address-page';
   static const orderSuccess = 'order-success-page';
-  static const digiaTest = 'digia_test';
 }

@@ -1,4 +1,4 @@
-package com.example.medihub_template
+package com.digia.medihub_flutter
 
 import io.flutter.embedding.android.FlutterActivity
 

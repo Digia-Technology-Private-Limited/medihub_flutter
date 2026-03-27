@@ -1,16 +1,22 @@
-# medihub_template
+# MediHub Flutter
 
-A new Flutter project.
+A sample e-commerce app demonstrating analytics and CEP (Customer Engagement Platform) integrations using [Digia Engage](https://digia.tech). Built with Flutter.
 
-## Getting Started
+## Branches
 
-This project is a starting point for a Flutter application.
+| Branch | Description |
+|--------|-------------|
+| `main` | Clean baseline — analytics logs to console only, no SDK dependencies |
+| `clevertap` | Digia Engage + CleverTap integration |
+| `moengage` | Digia Engage + MoEngage integration |
 
-A few resources to get you started if this is your first Flutter project:
+## This Branch (main)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+No Digia or CEP SDK. `AnalyticsService` logs all events via `debugPrint(...)`. Use this as a starting point for your own integration.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Run
+
+1. Install dependencies: `flutter pub get`
+2. Run: `flutter run`
+
+Requires Flutter 3.x+ and Dart 3.x+.

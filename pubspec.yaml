@@ -26,13 +26,7 @@ dependencies:
   shimmer: ^3.0.0
   fluttertoast: ^8.2.0
 
-  # Analytics
-  clevertap_plugin: ^3.7.0
   flutter_svg: ^2.2.3
-
-  # Digia
-  digia_engage: ^1.0.0
-  digia_engage_clevertap: ^1.0.1
 
 dev_dependencies:
   flutter_test:

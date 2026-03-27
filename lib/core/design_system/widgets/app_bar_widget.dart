@@ -54,7 +54,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  settings: const RouteSettings(name: DigiaScreenIds.search),
+                  settings: const RouteSettings(name: ScreenIds.search),
                   builder: (_) => const SearchScreen(),
                 ),
               );
@@ -70,7 +70,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  settings: const RouteSettings(name: DigiaScreenIds.cart),
+                  settings: const RouteSettings(name: ScreenIds.cart),
                   builder: (_) => const CartScreen(),
                 ),
               );

@@ -13,7 +13,6 @@ import '../../core/services/analytics_service.dart';
 import '../../core/design_system/design_system.dart';
 import '../search/search_screen.dart';
 import '../cart/cart_screen.dart';
-import 'package:digia_engage/digia_engage.dart';
 
 class PDPScreen extends StatefulWidget {
   final String productHandle;
@@ -125,8 +124,6 @@ class _PDPScreenState extends State<PDPScreen> {
                   _buildImageGallery(),
                   _buildProductInfo(),
                   const SizedBox(height: 16),
-                  const DigiaSlot(AppConstants.digiaPdpSlotKey),
-                  const SizedBox(height: 16),
                   _buildVariantSelector(),
                   const SizedBox(height: 16),
                   _buildDeliveryServices(),
@@ -172,7 +169,7 @@ class _PDPScreenState extends State<PDPScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                settings: const RouteSettings(name: DigiaScreenIds.search),
+                settings: const RouteSettings(name: ScreenIds.search),
                 builder: (_) => const SearchScreen(),
               ),
             );
@@ -190,7 +187,7 @@ class _PDPScreenState extends State<PDPScreen> {
                       context,
                       MaterialPageRoute(
                         settings:
-                            const RouteSettings(name: DigiaScreenIds.cart),
+                            const RouteSettings(name: ScreenIds.cart),
                         builder: (_) => const CartScreen(),
                       ),
                     );
@@ -888,7 +885,7 @@ class _PDPScreenState extends State<PDPScreen> {
                       context,
                       MaterialPageRoute(
                         settings:
-                            const RouteSettings(name: DigiaScreenIds.cart),
+                            const RouteSettings(name: ScreenIds.cart),
                         builder: (_) => const CartScreen(),
                       ),
                     );

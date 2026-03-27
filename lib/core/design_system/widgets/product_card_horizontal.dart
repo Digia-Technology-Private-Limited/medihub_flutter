@@ -39,7 +39,7 @@ class _ProductCardHorizontalState extends State<ProductCardHorizontal> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            settings: const RouteSettings(name: DigiaScreenIds.productDetail),
+            settings: const RouteSettings(name: ScreenIds.productDetail),
             builder: (_) => PDPScreen(productHandle: product.handle),
           ),
         );

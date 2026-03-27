@@ -63,7 +63,7 @@ class BrandsScreen extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   settings: const RouteSettings(
-                    name: DigiaScreenIds.productListing,
+                    name: ScreenIds.productListing,
                   ),
                   builder: (_) => ProductListingScreen(
                     products: filteredProducts,

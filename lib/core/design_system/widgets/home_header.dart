@@ -77,7 +77,7 @@ class HomeHeader extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       settings:
-                          const RouteSettings(name: DigiaScreenIds.search),
+                          const RouteSettings(name: ScreenIds.search),
                       builder: (_) => const SearchScreen(),
                     ),
                   );

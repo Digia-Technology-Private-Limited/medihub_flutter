@@ -10,7 +10,6 @@ import '../../providers/address_provider.dart';
 import '../../models/product.dart';
 import '../../core/design_system/design_system.dart';
 import '../product_listing/product_listing_screen.dart';
-import 'package:digia_engage/digia_engage.dart';
 
 class HomepageScreen extends StatefulWidget {
   const HomepageScreen({super.key});
@@ -85,8 +84,6 @@ class _HomepageScreenState extends State<HomepageScreen> {
                         ),
                         const SizedBox(height: 16),
                         _buildCategoryChips(collections),
-                        const SizedBox(height: 24),
-                        const DigiaSlot(AppConstants.digiaHomepageSlotKey),
                         const SizedBox(height: 16),
                         ...collections.map((collection) => Padding(
                               padding: const EdgeInsets.only(bottom: 24),
@@ -131,7 +128,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   context,
                   MaterialPageRoute(
                     settings: const RouteSettings(
-                      name: DigiaScreenIds.productListing,
+                      name: ScreenIds.productListing,
                     ),
                     builder: (_) => ProductListingScreen(
                       collectionHandle: collection.handle,
@@ -219,7 +216,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                     context,
                     MaterialPageRoute(
                       settings: const RouteSettings(
-                        name: DigiaScreenIds.productListing,
+                        name: ScreenIds.productListing,
                       ),
                       builder: (_) => ProductListingScreen(
                         products: filteredProducts,
@@ -282,7 +279,7 @@ class _CollectionProductSectionState extends State<_CollectionProductSection> {
               context,
               MaterialPageRoute(
                 settings: const RouteSettings(
-                  name: DigiaScreenIds.productListing,
+                  name: ScreenIds.productListing,
                 ),
                 builder: (_) => ProductListingScreen(
                   collectionHandle: widget.collection.handle,

@@ -148,7 +148,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen>
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                         settings:
-                            const RouteSettings(name: DigiaScreenIds.home),
+                            const RouteSettings(name: ScreenIds.home),
                         builder: (_) => const MainShell(),
                       ),
                       (route) => false,

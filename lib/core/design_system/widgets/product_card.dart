@@ -40,7 +40,7 @@ class _ProductCardState extends State<ProductCard> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            settings: const RouteSettings(name: DigiaScreenIds.productDetail),
+            settings: const RouteSettings(name: ScreenIds.productDetail),
             builder: (_) => PDPScreen(productHandle: widget.product.handle),
           ),
         );

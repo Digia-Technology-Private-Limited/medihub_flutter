@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:clevertap_plugin/clevertap_plugin.dart';
 
-/// Analytics service for tracking user events via CleverTap.
+/// Analytics service — logs events to console on this branch.
+/// On the `clevertap` or `moengage` branches this routes through the respective SDK.
 /// Uses singleton pattern for app-wide access.
 class AnalyticsService {
   static final AnalyticsService _instance = AnalyticsService._internal();
@@ -10,18 +10,10 @@ class AnalyticsService {
 
   bool _isInitialized = false;
 
-  /// Initialize CleverTap SDK
   Future<void> initialize() async {
     if (_isInitialized) return;
-
-    // CleverTap is auto-initialized from native config
-    // Enable debug mode in development
-    if (kDebugMode) {
-      CleverTapPlugin.setDebugLevel(3);
-    }
-
     _isInitialized = true;
-    _log('CleverTap initialized');
+    _log('initialized');
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -30,12 +22,8 @@ class AnalyticsService {
 
   void _log(String message) {
     if (kDebugMode) {
-      debugPrint('[Analytics] $message');
+      debugPrint('[Digia-Medihub] $message');
     }
-  }
-
-  void logDigiaProbe(String message) {
-    _log('[DIGIA_PROBE] $message');
   }
 
   void _trackEvent(String eventName, Map<String, dynamic> properties) {
@@ -49,10 +37,7 @@ class AnalyticsService {
       'timestamp': DateTime.now().toIso8601String(),
     };
 
-    CleverTapPlugin.recordEvent(eventName, enrichedProperties);
-    _log(
-      'Event: $eventName props=$enrichedProperties (current flow: App -> CleverTap SDK -> Digia CEP callbacks)',
-    );
+    _log('$eventName $enrichedProperties');
   }
 
   // ─────────────────────────────────────────────────────────────────
