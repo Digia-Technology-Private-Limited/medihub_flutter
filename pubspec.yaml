@@ -31,10 +31,8 @@ dependencies:
   flutter_svg: ^2.2.3
 
   # Digia
-  digia_engage:
-    path: ../digia_engage/flutter
-  digia_clevertap:
-    path: ../digia_clevertap/flutter
+  digia_engage: ^1.0.0
+  digia_engage_clevertap: ^1.0.1
 
 dev_dependencies:
   flutter_test:

@@ -101,10 +101,10 @@ packages:
     dependency: "direct main"
     description:
       name: clevertap_plugin
-      sha256: b2b4140a2a28602bf2fd5a01fc4cdab442cc21da0a7e424a415461e91b21f0b6
+      sha256: ff4f58430b5f15c53d3e0e1aa5b288e28bfb0eb356b12d867e80619e240c28f4
       url: "https://pub.dev"
     source: hosted
-    version: "3.7.0"
+    version: "3.8.1"
   clock:
     dependency: transitive
     description:
@@ -169,20 +169,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.12"
-  digia_clevertap:
-    dependency: "direct main"
-    description:
-      path: "../digia_clevertap/flutter"
-      relative: true
-    source: path
-    version: "0.1.0"
   digia_engage:
     dependency: "direct main"
     description:
-      path: "../digia_engage/flutter"
-      relative: true
-    source: path
-    version: "1.7.0"
+      name: digia_engage
+      sha256: e5a98c75a513c467c9b41a0b39e970744ebac0899f77d95381cf3529fd0dd737
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  digia_engage_clevertap:
+    dependency: "direct main"
+    description:
+      name: digia_engage_clevertap
+      sha256: c1ab57fd30003c9921ddd4514d0f41c40f2744ccfeacf4d032af3c98c8d45be0
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   digia_expr:
     dependency: transitive
     description:
