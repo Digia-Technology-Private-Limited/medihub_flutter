@@ -1,7 +1,8 @@
+import 'package:clevertap_plugin/clevertap_plugin.dart';
 import 'package:flutter/foundation.dart';
 
-/// Analytics service — logs events to console on this branch.
-/// On the `clevertap` or `moengage` branches this routes through the respective SDK.
+/// Analytics service — routes events to CleverTap on this branch.
+/// On `main` this logs to console only. On `moengage` branch, routes to MoEngage.
 /// Uses singleton pattern for app-wide access.
 class AnalyticsService {
   static final AnalyticsService _instance = AnalyticsService._internal();
@@ -13,7 +14,29 @@ class AnalyticsService {
   Future<void> initialize() async {
     if (_isInitialized) return;
     _isInitialized = true;
-    _log('initialized');
+    _log('CleverTap Analytics initialized');
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // USER IDENTITY
+  // ─────────────────────────────────────────────────────────────────
+
+  /// Identify the user. Call after successful login/sign-up.
+  /// [userId] is required; [email], [firstName], [lastName] are optional.
+  Future<void> identifyUser(
+    String userId, {
+    String? email,
+    String? firstName,
+    String? lastName,
+  }) async {
+    final profile = <String, dynamic>{
+      'Identity': userId,
+      if (email != null) 'Email': email,
+      if (firstName != null || lastName != null)
+        'Name': '${firstName ?? ''} ${lastName ?? ''}'.trim(),
+    };
+    CleverTapPlugin.onUserLogin(profile);
+    _log('User identified: $userId');
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -31,13 +54,12 @@ class AnalyticsService {
       _log('Warning: Attempted to track event before initialization');
       return;
     }
-
-    final enrichedProperties = {
+    final enriched = {
       ...properties,
       'timestamp': DateTime.now().toIso8601String(),
     };
-
-    _log('$eventName $enrichedProperties');
+    CleverTapPlugin.recordEvent(eventName, enriched);
+    _log('$eventName $enriched');
   }
 
   // ─────────────────────────────────────────────────────────────────

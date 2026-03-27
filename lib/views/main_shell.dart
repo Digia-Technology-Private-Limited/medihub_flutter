@@ -1,5 +1,7 @@
+import 'package:digia_engage/digia_engage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../core/constants/digia_screen_ids.dart';
 import '../core/design_system/design_system.dart';
 import '../core/services/analytics_service.dart';
 import '../core/theme/app_colors.dart';
@@ -22,12 +24,25 @@ class _MainShellState extends State<MainShell> {
 
   static const _tabNames = ['Home', 'Brands', 'Account', 'Cart'];
 
+  static const _tabScreenIds = [
+    ScreenIds.home,
+    ScreenIds.brands,
+    ScreenIds.account,
+    ScreenIds.cart,
+  ];
+
   final List<Widget> _screens = const [
     HomepageScreen(),
     BrandsScreen(),
     AccountScreen(),
     CartScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    Digia.setCurrentScreen(_tabScreenIds[_currentIndex]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +84,7 @@ class _MainShellState extends State<MainShell> {
             setState(() {
               _currentIndex = index;
             });
+            Digia.setCurrentScreen(_tabScreenIds[index]);
           },
           type: BottomNavigationBarType.fixed,
           selectedFontSize: 12,

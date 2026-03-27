@@ -47,5 +47,5 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Secrets — copy lib/config/secrets.dart.example to secrets.dart and fill in credentials
-lib/config/secrets.dart
+# Secrets — copy config/secrets.json.example to config/secrets.json and fill in credentials
+config/secrets.json

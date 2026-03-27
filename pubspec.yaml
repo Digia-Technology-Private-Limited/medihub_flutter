@@ -24,6 +24,12 @@ dependencies:
   google_fonts: ^6.1.0
   cached_network_image: ^3.3.0
   shimmer: ^3.0.0
+
+  # Digia Engage + CleverTap
+  clevertap_plugin: ^3.7.0
+  digia_engage: ^1.1.0
+  digia_engage_clevertap: ^1.1.0
+
   fluttertoast: ^8.2.0
 
   flutter_svg: ^2.2.3

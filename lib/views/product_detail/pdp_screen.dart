@@ -1,3 +1,4 @@
+import 'package:digia_engage/digia_engage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -123,6 +124,7 @@ class _PDPScreenState extends State<PDPScreen> {
                   _buildDeliveryBanner(),
                   _buildImageGallery(),
                   _buildProductInfo(),
+                  const DigiaSlot(AppConstants.digiaPdpSlotKey),
                   const SizedBox(height: 16),
                   _buildVariantSelector(),
                   const SizedBox(height: 16),

@@ -1,3 +1,5 @@
+import 'package:digia_engage/digia_engage.dart';
+import 'package:digia_engage_clevertap/digia_engage_clevertap.dart';
 import 'package:flutter/material.dart';
 import 'package:medihub/core/services/analytics_service.dart';
 import 'package:provider/provider.dart';
@@ -14,16 +16,25 @@ Future<void> main() async {
 
   final themeProvider = ThemeProvider();
   await themeProvider.initialize();
+
+  // Initialize analytics (CleverTap init happens natively in MainApplication on Android
+  // and AppDelegate on iOS via the clevertap_plugin)
   await AnalyticsService().initialize();
   AnalyticsService().trackAppOpened();
+
+  const digiaProjectID = String.fromEnvironment('DIGIA_PROJECT_ID');
+  // Initialize Digia Engage and register the CleverTap plugin
+  await Digia.initialize(DigiaConfig(apiKey: digiaProjectID));
+  Digia.register(DigiaCleverTapPlugin());
 
   runApp(MediHubApp(themeProvider: themeProvider));
 }
 
 class MediHubApp extends StatelessWidget {
-  const MediHubApp({super.key, required this.themeProvider});
+  MediHubApp({super.key, required this.themeProvider});
 
   final ThemeProvider themeProvider;
+  final DigiaNavigatorObserver _digiaNavigatorObserver = DigiaNavigatorObserver();
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +52,13 @@ class MediHubApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
-            themeMode:
-                themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            // Digia Engage observer tracks navigation for screen-based campaign targeting
+            navigatorObservers: [_digiaNavigatorObserver],
+            // DigiaHost enables Digia Engage in-app overlays and native display campaigns
+            builder: (context, child) => DigiaHost(
+              child: child ?? const SizedBox.shrink(),
+            ),
             home: const MainShell(),
           );
         },

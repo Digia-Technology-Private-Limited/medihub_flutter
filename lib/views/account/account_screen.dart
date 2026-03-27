@@ -4,6 +4,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/services/analytics_service.dart';
 import '../../providers/theme_provider.dart';
+import '../digiatest/digia_test_screen.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -175,6 +176,19 @@ class AccountScreen extends StatelessWidget {
                     onTap: () {},
                   ),
                 ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              color: colors.cardBackground,
+              child: _buildSettingItem(
+                context: context,
+                icon: Icons.science_outlined,
+                title: 'Digia Test',
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const DigiaTestScreen()),
+                ),
               ),
             ),
             const SizedBox(height: 32),

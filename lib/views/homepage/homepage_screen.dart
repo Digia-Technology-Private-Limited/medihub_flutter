@@ -1,3 +1,4 @@
+import 'package:digia_engage/digia_engage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_constants.dart';
@@ -82,6 +83,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           imageUrls: AppConstants.carouselImages,
                           height: 200,
                         ),
+                        const SizedBox(height: 16),
+                        const DigiaSlot(AppConstants.digiaHomepageSlotKey),
                         const SizedBox(height: 16),
                         _buildCategoryChips(collections),
                         const SizedBox(height: 16),
