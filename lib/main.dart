@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medihub/core/services/analytics_service.dart';
+import 'package:medihub/core/services/digia_service.dart';
 import 'package:provider/provider.dart';
 
 import 'core/theme/app_theme.dart';
@@ -11,7 +12,7 @@ import 'views/main_shell.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await DigiaService().initialize();
   final themeProvider = ThemeProvider();
   await themeProvider.initialize();
   await AnalyticsService().initialize();
