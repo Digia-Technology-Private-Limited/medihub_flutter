@@ -2,6 +2,7 @@ import 'package:digia_engage/digia_engage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:medihub/firebase_options.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
 import 'package:digia_engage_webengage/digia_engage_webengage.dart' as digia;
 
@@ -32,59 +33,22 @@ class DigiaService {
   Future<void> initialize() async {
     if (_initialized) return;
     _initialized = true;
-
-    WebEngagePlugin _webEngagePlugin = new WebEngagePlugin();
-    await getFCMTokenAndPassToWebEngage();
-
-    if (kDebugMode) {
-      debugPrint('[DiagiaService] MoEngage initialised');
-    }
-
-    WebEngagePlugin.setUserEmail("ramsthr@gmail.com");
-    WebEngagePlugin.userLogin('android');
-
     await Digia.initialize(
       DigiaConfig(
-        apiKey: 'YOUR_DIGIA_API_KEY',
+        apiKey: 'YOUR_DIGIA_API_KEY', // TODO: Replace with actual API key
         flavor: Flavor.debug(environment: Environment.development),
         logLevel: kDebugMode ? DigiaLogLevel.verbose : DigiaLogLevel.error,
       ),
     );
 
-    if (kDebugMode) {
-      debugPrint('[DiagiaService] Digia SDK initialised');
-    }
+    WebEngagePlugin _webEngagePlugin = new WebEngagePlugin();
 
-    // ── 3. Register MoEngage as the CEP plugin ───────────────────────────────
-    // From this point, MoEngage self-handled in-app campaigns are translated
-    // into InAppPayload objects and handed to DigiaHost for rendering.
+    if (kDebugMode) {
+      debugPrint('[DiagiaService] MoEngage initialised');
+    }
     Digia.register(digia.WebEngagePlugin());
 
-    if (kDebugMode) {
-      debugPrint('[DiagiaService] MoEngagePlugin registered with Digia');
-    }
-  }
-}
-
-Future<void> getFCMTokenAndPassToWebEngage() async {
-  try {
-    await Firebase.initializeApp();
-
-    // Get the FCM token
-    String? token = await FirebaseMessaging.instance.getToken();
-
-    if (token != null) {
-      print("FCM Token: $token");
-      // Pass the token to WebEngage
-      WebEngagePlugin.setPushToken(token);
-    }
-
-    // Listen for token refreshes and update WebEngage
-    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
-      print("FCM Token Refreshed: $newToken");
-      WebEngagePlugin.setPushToken(newToken);
-    });
-  } catch (e) {
-    print("Error getting FCM token: $e");
+    WebEngagePlugin.setUserEmail("ram@gmail.com");
+    WebEngagePlugin.userLogin('ios');
   }
 }

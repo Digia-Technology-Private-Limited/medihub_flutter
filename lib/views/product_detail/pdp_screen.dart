@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:webengage_flutter/webengage_flutter.dart';
 import '../../models/product.dart';
 import '../../providers/products_provider.dart';
 import '../../providers/cart_provider.dart';
@@ -35,6 +36,7 @@ class _PDPScreenState extends State<PDPScreen> {
   @override
   void initState() {
     super.initState();
+    WebEngagePlugin.trackScreen('pdp');
     _loadProduct();
   }
 
@@ -186,8 +188,7 @@ class _PDPScreenState extends State<PDPScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        settings:
-                            const RouteSettings(name: ScreenIds.cart),
+                        settings: const RouteSettings(name: ScreenIds.cart),
                         builder: (_) => const CartScreen(),
                       ),
                     );
@@ -884,8 +885,7 @@ class _PDPScreenState extends State<PDPScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        settings:
-                            const RouteSettings(name: ScreenIds.cart),
+                        settings: const RouteSettings(name: ScreenIds.cart),
                         builder: (_) => const CartScreen(),
                       ),
                     );

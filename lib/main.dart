@@ -1,3 +1,4 @@
+import 'package:digia_engage/api/widgets/digia_host.dart';
 import 'package:flutter/material.dart';
 import 'package:medihub/core/services/analytics_service.dart';
 import 'package:medihub/core/services/digia_service.dart';
@@ -44,7 +45,7 @@ class MediHubApp extends StatelessWidget {
             darkTheme: AppTheme.darkTheme,
             themeMode:
                 themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-            home: const MainShell(),
+            home: DigiaHost(child: MainShell()),
           );
         },
       ),
