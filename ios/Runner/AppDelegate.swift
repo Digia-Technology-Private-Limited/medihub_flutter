@@ -23,7 +23,7 @@ var bridge:WebEngagePlugin? = nil
         bridge = WebEngagePlugin()
           // Push notification delegates
         WebEngage.sharedInstance().pushNotificationDelegate = self.bridge
-        WebEngage.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions, notificationDelegate: DigiaSuppressPlugin.shared())
+        WebEngage.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions, notificationDelegate: DigiaSuppressPlugin.shared)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
